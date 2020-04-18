@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(196, 196, 196) !important;
+
+  .form-settings {
+    width: 20%;
+    margin: 200px auto;
+  }
+
+  .logout-btn {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    margin-top: 9px;
+  }
+
+  .welcome-intro {
+    width: 35%;
+    text-align: center;
+    margin: 200px auto;
+  }
+}
