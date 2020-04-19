@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Form, Button } from "react-bootstrap";
 import { createPost } from "../functions/post-functions";
+import { Redirect } from "react-router-dom";
 
 class CreatePost extends Component {
   state = {
@@ -27,6 +28,9 @@ class CreatePost extends Component {
   };
 
   render() {
+    if (!this.props.user) {
+      return <Redirect to="/signin" />;
+    }
     return (
       <Form className="form-settings">
         <Form.Group controlId="formBasicEmail">

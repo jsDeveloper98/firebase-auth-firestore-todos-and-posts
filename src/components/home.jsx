@@ -1,6 +1,10 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 
-const Home = () => {
+const Home = (props) => {
+  if (!props.user) {
+    return <Redirect to="/signin" />;
+  }
   return (
     <div className="welcome-intro">
       <h1>Welcome to Our Web Page!</h1>

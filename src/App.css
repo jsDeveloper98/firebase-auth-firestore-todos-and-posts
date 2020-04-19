@@ -17,7 +17,44 @@ body .logout-btn {
   margin-top: 9px;
 }
 body .welcome-intro {
-  width: 35%;
+  width: 40%;
   text-align: center;
   margin: 200px auto;
+}
+body .posts-list {
+  margin-top: 30px;
+}
+body .posts-list .post-item {
+  width: 70%;
+  margin: 0 auto 30px auto;
+  position: relative;
+  word-wrap: break-word;
+  max-height: 278px;
+  overflow: hidden;
+}
+body .posts-list .post-item .post-title {
+  max-height: 50px;
+  overflow: hidden;
+}
+body .posts-list .post-item .post-decription {
+  max-height: 70px;
+  overflow: hidden;
+}
+body .posts-list .post-item .remove-post {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+}
+body .post-item-details {
+  width: 777px;
+  margin: 30px auto 0 auto;
+  position: relative;
+}
+body .post-item-details .close-post-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
 }

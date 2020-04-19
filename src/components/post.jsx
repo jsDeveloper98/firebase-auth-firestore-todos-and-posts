@@ -1,17 +1,20 @@
 import React from "react";
 import { Jumbotron, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-const Post = () => {
+const Post = (props) => {
   return (
     <Jumbotron>
-      <h1>Hello, world!</h1>
-      <p>
-        This is a simple hero unit, a simple jumbotron-style component for
-        calling extra attention to featured content or information.
-      </p>
-      <p>
-        <Button variant="primary">Learn more</Button>
-      </p>
+      <h1 className="post-title">{props.post.title}</h1>
+      <p className="post-decription">{props.post.description}</p>
+      <Link to={"/post/" + props.post.id}>
+        <p>
+          <Button variant="primary">Open Post</Button>
+        </p>
+      </Link>
+      <div className="remove-post" onClick={() => props.onRemove(props.post)}>
+        ✗
+      </div>
     </Jumbotron>
   );
 };
