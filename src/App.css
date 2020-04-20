@@ -52,6 +52,7 @@ body .post-item-details {
   width: 777px;
   margin: 30px auto 0 auto;
   position: relative;
+  word-wrap: break-word;
 }
 body .post-item-details .close-post-btn {
   position: absolute;
