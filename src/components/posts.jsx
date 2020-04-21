@@ -4,14 +4,22 @@ import { fetchPosts, deletePost } from "../functions/post-functions";
 import { Redirect } from "react-router-dom";
 
 class Posts extends Component {
+  _isMounted = false;
   state = {
     posts: [],
   };
 
   componentDidMount = () => {
+    this._isMounted = true;
     fetchPosts().then((posts) => {
-      this.setState({ posts });
+      if (this._isMounted) {
+        this.setState({ posts });
+      }
     });
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   removePost = (post) => {
@@ -29,7 +37,12 @@ class Posts extends Component {
       <div className="container posts-list">
         {this.state.posts.map((post, i) => (
           <div className="post-item" key={i}>
-            <Post key={post.id} post={post} onRemove={this.removePost} />
+            <Post
+              key={post.id}
+              post={post}
+              user={this.props.user}
+              onRemove={this.removePost}
+            />
           </div>
         ))}
       </div>

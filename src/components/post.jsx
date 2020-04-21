@@ -1,8 +1,11 @@
 import React from "react";
 import { Jumbotron, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 const Post = (props) => {
+  if (!props.user) {
+    return <Redirect to="/signin" />;
+  }
   return (
     <Jumbotron>
       <h1 className="post-title">{props.post.title}</h1>

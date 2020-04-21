@@ -8,7 +8,7 @@ const PostDetails = (props) => {
   return (
     <div className="post-item-details">
       <Jumbotron>
-        <h1 className="post-details-title">{selectedPost.title}</h1>
+        <h1>{selectedPost.title}</h1>
         <p>{selectedPost.description}</p>
         <Link to="/posts">
           <Button className="close-post-btn" variant="secondary">
