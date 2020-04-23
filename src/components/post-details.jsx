@@ -7,9 +7,9 @@ const PostDetails = (props) => {
 
   return (
     <div className="post-item-details">
-      <Jumbotron>
-        <h1>{selectedPost.title}</h1>
-        <p>{selectedPost.description}</p>
+      <Jumbotron className="post-item-jumbotron">
+        <h1 className="post-title">{selectedPost.title}</h1>
+        <p className="post-decription">{selectedPost.description}</p>
         <Link to="/posts">
           <Button className="close-post-btn" variant="secondary">
             Close Post

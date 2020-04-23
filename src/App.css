@@ -4,11 +4,22 @@
   box-sizing: border-box;
 }
 body {
-  background-color: #c4c4c4 !important;
+  background-color: #222226 !important;
 }
 body .form-settings {
   width: 20%;
   margin: 200px auto;
+}
+body .form-settings .label-settings {
+  color: #777;
+}
+body .form-settings .input-settings {
+  background-color: #575757;
+  border: none;
+  color: #fff;
+}
+body .form-settings .form-button {
+  margin-top: 10px;
 }
 body .logout-btn {
   position: absolute;
@@ -20,6 +31,7 @@ body .welcome-intro {
   width: 40%;
   text-align: center;
   margin: 200px auto;
+  color: #777;
 }
 body .posts-list {
   margin-top: 30px;
@@ -32,14 +44,6 @@ body .posts-list .post-item {
   max-height: 278px;
   overflow: hidden;
 }
-body .posts-list .post-item .post-title {
-  max-height: 50px;
-  overflow: hidden;
-}
-body .posts-list .post-item .post-decription {
-  max-height: 70px;
-  overflow: hidden;
-}
 body .posts-list .post-item .remove-post {
   position: absolute;
   top: 10px;
@@ -47,6 +51,7 @@ body .posts-list .post-item .remove-post {
   font-size: 25px;
   font-weight: bold;
   cursor: pointer;
+  color: #850000;
 }
 body .post-item-details {
   width: 777px;
@@ -58,4 +63,46 @@ body .post-item-details .close-post-btn {
   position: absolute;
   top: 10px;
   right: 15px;
+}
+body .post-item-jumbotron {
+  background-color: #575757 !important;
+}
+body .post-item-jumbotron .post-title {
+  max-height: 50px;
+  overflow: hidden;
+  color: #fff;
+}
+body .post-item-jumbotron .post-decription {
+  max-height: 70px;
+  overflow: hidden;
+  color: #fff;
+}
+body .empty-posts {
+  color: #777;
+  text-align: center;
+  margin-top: 250px;
+}
+body .todo-form {
+  width: 30%;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+body .todo-form .todo-header {
+  color: #777;
+  font-size: 100px;
+}
+body .todo-form input {
+  width: 100%;
+  height: 55px;
+  background-color: #575757;
+  border: none;
+  outline: none;
+  font-size: 22px;
+  padding: 0 20px;
+  color: #fff;
+}
+body .todo-form input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }

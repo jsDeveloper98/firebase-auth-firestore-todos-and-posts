@@ -7,7 +7,7 @@ const Post = (props) => {
     return <Redirect to="/signin" />;
   }
   return (
-    <Jumbotron>
+    <Jumbotron className="post-item-jumbotron">
       <h1 className="post-title">{props.post.title}</h1>
       <p className="post-decription">{props.post.description}</p>
       <Link
@@ -18,7 +18,7 @@ const Post = (props) => {
           },
         }}
       >
-        <Button variant="primary">Open Post</Button>
+        <Button variant="secondary">Open Post</Button>
       </Link>
 
       <div className="remove-post" onClick={() => props.onRemove(props.post)}>

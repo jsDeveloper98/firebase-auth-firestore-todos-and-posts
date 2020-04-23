@@ -34,18 +34,26 @@ class Posts extends Component {
       return <Redirect to="/signin" />;
     }
     return (
-      <div className="container posts-list">
-        {this.state.posts.map((post, i) => (
-          <div className="post-item" key={i}>
-            <Post
-              key={post.id}
-              post={post}
-              user={this.props.user}
-              onRemove={this.removePost}
-            />
+      <React.Fragment>
+        {this.state.posts.length ? (
+          <div className="container posts-list">
+            {this.state.posts.map((post, i) => (
+              <div className="post-item" key={i}>
+                <Post
+                  key={post.id}
+                  post={post}
+                  user={this.props.user}
+                  onRemove={this.removePost}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        ) : (
+          <div className="empty-posts">
+            <h1>No Posts</h1>
+          </div>
+        )}
+      </React.Fragment>
     );
   }
 }

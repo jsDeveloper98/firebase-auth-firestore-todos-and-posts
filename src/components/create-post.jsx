@@ -34,7 +34,7 @@ class CreatePost extends Component {
     return (
       <Form className="form-settings">
         <Form.Group controlId="formBasicEmail">
-          <Form.Label>Title</Form.Label>
+          <Form.Label className="label-settings">Title</Form.Label>
           <Form.Control
             type="text"
             placeholder="Title"
@@ -42,11 +42,12 @@ class CreatePost extends Component {
             onChange={this.handleChange}
             value={this.state.title}
             autoComplete="off"
+            className="input-settings"
           />
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">
-          <Form.Label>Description</Form.Label>
+          <Form.Label className="label-settings">Description</Form.Label>
           <Form.Control
             type="text"
             placeholder="Description"
@@ -54,9 +55,15 @@ class CreatePost extends Component {
             onChange={this.handleChange}
             value={this.state.description}
             autoComplete="off"
+            className="input-settings"
           />
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={this.createPost}>
+        <Button
+          className="form-button"
+          variant="secondary"
+          type="submit"
+          onClick={this.createPost}
+        >
           Create Post
         </Button>
       </Form>

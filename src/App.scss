@@ -4,12 +4,34 @@
   box-sizing: border-box;
 }
 
+$background: #222226;
+$input: rgb(87, 87, 87);
+$text: #777;
+$border: #444446;
+$white: white;
+$remove: rgb(133, 0, 0);
+$boxShadow: rgba(0, 123, 255, 0.25);
+
 body {
-  background-color: rgb(196, 196, 196) !important;
+  background-color: $background !important;
 
   .form-settings {
     width: 20%;
     margin: 200px auto;
+
+    .label-settings {
+      color: $text;
+    }
+
+    .input-settings {
+      background-color: $input;
+      border: none;
+      color: $white;
+    }
+
+    .form-button {
+      margin-top: 10px;
+    }
   }
 
   .logout-btn {
@@ -23,6 +45,7 @@ body {
     width: 40%;
     text-align: center;
     margin: 200px auto;
+    color: $text;
   }
 
   .posts-list {
@@ -36,16 +59,6 @@ body {
       max-height: 278px;
       overflow: hidden;
 
-      .post-title {
-        max-height: 50px;
-        overflow: hidden;
-      }
-
-      .post-decription {
-        max-height: 70px;
-        overflow: hidden;
-      }
-
       .remove-post {
         position: absolute;
         top: 10px;
@@ -53,6 +66,7 @@ body {
         font-size: 25px;
         font-weight: bold;
         cursor: pointer;
+        color: $remove;
       }
     }
   }
@@ -66,6 +80,56 @@ body {
       position: absolute;
       top: 10px;
       right: 15px;
+    }
+  }
+
+  .post-item-jumbotron {
+    background-color: $input !important;
+
+    .post-title {
+      max-height: 50px;
+      overflow: hidden;
+      color: $white;
+    }
+
+    .post-decription {
+      max-height: 70px;
+      overflow: hidden;
+      color: $white;
+    }
+  }
+
+  .empty-posts {
+    color: $text;
+    text-align: center;
+    margin-top: 250px;
+  }
+
+  .todo-form {
+    width: 30%;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .todo-header {
+      color: $text;
+      font-size: 100px;
+    }
+
+    input {
+      width: 100%;
+      height: 55px;
+      background-color: $input;
+      border: none;
+      outline: none;
+      font-size: 22px;
+      padding: 0 20px;
+      color: $white;
+
+      &:focus {
+        box-shadow: 0 0 0 0.2rem $boxShadow;
+      }
     }
   }
 }

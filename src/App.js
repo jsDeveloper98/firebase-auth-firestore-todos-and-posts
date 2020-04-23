@@ -9,6 +9,7 @@ import Home from "./components/home";
 import CreatePost from "./components/create-post";
 import Posts from "./components/posts";
 import PostDetails from "./components/post-details";
+import Todo from "./components/todo";
 
 class App extends Component {
   state = {
@@ -49,6 +50,7 @@ class App extends Component {
         />
         <Route path="/posts" component={() => <Posts user={user} />} />
         <Route path="/post/:id" component={PostDetails} />
+        <Route path="/todolist" component={() => <Todo user={user} />} />
       </Router>
     );
   }

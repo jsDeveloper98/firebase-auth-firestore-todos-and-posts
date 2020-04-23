@@ -35,7 +35,7 @@ class SignIn extends Component {
     return (
       <Form className="form-settings">
         <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+          <Form.Label className="label-settings">Email address</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter email"
@@ -43,6 +43,7 @@ class SignIn extends Component {
             onChange={this.handleChange}
             value={this.state.email}
             autoComplete="off"
+            className="input-settings"
           />
           <Form.Text className="text-muted">
             We'll never share your email with anyone else.
@@ -50,16 +51,22 @@ class SignIn extends Component {
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
+          <Form.Label className="label-settings">Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Password"
             name="password"
             onChange={this.handleChange}
             value={this.state.password}
+            className="input-settings"
           />
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={this.signIn}>
+        <Button
+          className="form-button"
+          variant="secondary"
+          type="submit"
+          onClick={this.signIn}
+        >
           Sign In
         </Button>
       </Form>
