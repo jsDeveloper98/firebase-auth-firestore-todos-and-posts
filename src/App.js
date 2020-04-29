@@ -36,6 +36,7 @@ class App extends Component {
 
   render() {
     const { user } = this.state;
+
     return (
       <Router>
         <div className="main-nav-bar">
@@ -50,7 +51,7 @@ class App extends Component {
         />
         <Route path="/posts" component={() => <Posts user={user} />} />
         <Route path="/post/:id" component={PostDetails} />
-        <Route path="/todolist" component={() => <Todo user={user} />} />
+        <Route path="/todo" component={() => <Todo user={user} />} />
       </Router>
     );
   }

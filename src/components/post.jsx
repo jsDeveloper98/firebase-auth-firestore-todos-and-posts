@@ -6,6 +6,7 @@ const Post = (props) => {
   if (!props.user) {
     return <Redirect to="/signin" />;
   }
+
   return (
     <Jumbotron className="post-item-jumbotron">
       <h1 className="post-title">{props.post.title}</h1>

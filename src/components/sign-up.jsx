@@ -29,9 +29,12 @@ class SignIn extends Component {
   };
 
   render() {
+    const { email, password } = this.state;
+
     if (this.props.user) {
       return <Redirect to="/" />;
     }
+
     return (
       <Form className="form-settings">
         <Form.Group controlId="formBasicEmail">
@@ -41,7 +44,7 @@ class SignIn extends Component {
             placeholder="Enter email"
             name="email"
             onChange={this.handleChange}
-            value={this.state.email}
+            value={email}
             autoComplete="off"
             className="input-settings"
           />
@@ -57,7 +60,7 @@ class SignIn extends Component {
             placeholder="Password"
             name="password"
             onChange={this.handleChange}
-            value={this.state.password}
+            value={password}
             className="input-settings"
           />
         </Form.Group>

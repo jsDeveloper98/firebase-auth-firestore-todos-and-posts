@@ -2,8 +2,8 @@ import React from "react";
 import { Jumbotron, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const PostDetails = (props) => {
-  const { selectedPost } = props.location.state;
+const PostDetails = ({ location }) => {
+  const { selectedPost } = location.state;
 
   return (
     <div className="post-item-details">

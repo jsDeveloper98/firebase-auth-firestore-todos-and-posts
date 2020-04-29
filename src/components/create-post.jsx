@@ -18,6 +18,7 @@ class CreatePost extends Component {
   createPost = (e) => {
     e.preventDefault();
     const { title, description } = this.state;
+
     if (title && description) {
       createPost(title, description);
     }
@@ -28,9 +29,12 @@ class CreatePost extends Component {
   };
 
   render() {
+    const { title, description } = this.state;
+
     if (!this.props.user) {
       return <Redirect to="/signin" />;
     }
+
     return (
       <Form className="form-settings">
         <Form.Group controlId="formBasicEmail">
@@ -40,7 +44,7 @@ class CreatePost extends Component {
             placeholder="Title"
             name="title"
             onChange={this.handleChange}
-            value={this.state.title}
+            value={title}
             autoComplete="off"
             className="input-settings"
           />
@@ -53,7 +57,7 @@ class CreatePost extends Component {
             placeholder="Description"
             name="description"
             onChange={this.handleChange}
-            value={this.state.description}
+            value={description}
             autoComplete="off"
             className="input-settings"
           />

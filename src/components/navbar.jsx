@@ -20,7 +20,7 @@ const NavBar = (props) => {
                 <Nav.Link as={Link} to="/posts">
                   Posts
                 </Nav.Link>
-                <Nav.Link as={Link} to="/todolist">
+                <Nav.Link as={Link} to="/todo">
                   Todo List
                 </Nav.Link>
               </Nav>

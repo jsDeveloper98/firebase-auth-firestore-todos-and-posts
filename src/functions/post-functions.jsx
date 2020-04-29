@@ -14,16 +14,16 @@ const fetchPosts = () => {
     .collection("posts")
     .orderBy("createdAt", "desc")
     .get()
-    .then((res) => {
-      return res.docs.map((doc) => {
+    .then((res) =>
+      res.docs.map((doc) => {
         return {
           id: doc.id,
           title: doc.data().title,
           description: doc.data().description,
           createdAt: doc.data().createdAt,
         };
-      });
-    });
+      })
+    );
 };
 
 const deletePost = (post) => {

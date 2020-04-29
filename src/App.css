@@ -51,7 +51,7 @@ body .posts-list .post-item .remove-post {
   font-size: 25px;
   font-weight: bold;
   cursor: pointer;
-  color: #850000;
+  color: #970000;
 }
 body .post-item-details {
   width: 777px;
@@ -82,27 +82,81 @@ body .empty-posts {
   text-align: center;
   margin-top: 250px;
 }
-body .todo-form {
+body .todo-container {
   width: 30%;
   margin: 20px auto;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
-body .todo-form .todo-header {
+body .todo-container .todo-header {
   color: #777;
   font-size: 100px;
 }
-body .todo-form input {
+body .todo-container input {
+  width: 100%;
+  height: 60px;
+  background-color: #575757;
+  border: none;
+  font-size: 23px;
+  padding: 0 20px;
+  color: #fff;
+  z-index: 10;
+  border-bottom: 1px solid #444446;
+}
+body .todo-list {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+body .todo-list .loading-todos {
+  margin: 0 auto;
+  position: relative;
+  top: 100px;
+}
+body .todo-list .todo-item {
   width: 100%;
   height: 55px;
   background-color: #575757;
-  border: none;
-  outline: none;
-  font-size: 22px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #444446;
+  border-bottom: 1px solid #444446;
+  margin-top: -1px;
   padding: 0 20px;
-  color: #fff;
 }
-body .todo-form input:focus {
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+body .todo-list .todo-item:hover .remove-todo {
+  display: block;
+}
+body .todo-list .todo-item .todo-toggle {
+  width: 23px;
+  height: 23px;
+  background-color: #777;
+  font-size: 21px;
+  border-radius: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #00af00;
+  font-weight: bold;
+}
+body .todo-list .todo-item .todo-title {
+  margin-left: 15px;
+  color: #fff;
+  font-size: 21px;
+}
+body .todo-list .todo-item .todo-title.-done {
+  color: #777;
+  font-style: italic;
+  text-decoration: line-through;
+}
+body .todo-list .todo-item .remove-todo {
+  margin-left: auto;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+  font-size: 21px;
+  color: #970000;
 }
