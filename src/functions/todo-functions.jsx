@@ -48,6 +48,8 @@ const removeAllCompleted = () => {
       res.docs.map((doc) => {
         if (doc.data().done) {
           return doc.id;
+        } else {
+          return null;
         }
       })
     )
