@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Post from "./post";
-import { fetchPosts, deletePost } from "../functions/post-functions";
+import { fetchPosts, deletePost } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 

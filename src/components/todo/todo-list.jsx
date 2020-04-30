@@ -6,7 +6,12 @@ const TodoList = (props) => {
     <React.Fragment>
       {props.todos.map((todo, i) => (
         <div className="todo-item" key={i}>
-          <TodoItem key={todo.id} todo={todo} onRemove={props.onRemove} />
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onRemove={props.onRemove}
+            toggleDone={props.toggleDone}
+          />
         </div>
       ))}
     </React.Fragment>

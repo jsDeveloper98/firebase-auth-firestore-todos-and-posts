@@ -104,18 +104,18 @@ body .todo-container input {
   z-index: 10;
   border-bottom: 1px solid #444446;
 }
-body .todo-list {
+body .todo-container .todo-list {
   width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
 }
-body .todo-list .loading-todos {
+body .todo-container .todo-list .loading-todos {
   margin: 0 auto;
   position: relative;
   top: 100px;
 }
-body .todo-list .todo-item {
+body .todo-container .todo-list .todo-item {
   width: 100%;
   height: 55px;
   background-color: #575757;
@@ -126,10 +126,10 @@ body .todo-list .todo-item {
   margin-top: -1px;
   padding: 0 20px;
 }
-body .todo-list .todo-item:hover .remove-todo {
+body .todo-container .todo-list .todo-item:hover .remove-todo {
   display: block;
 }
-body .todo-list .todo-item .todo-toggle {
+body .todo-container .todo-list .todo-item .todo-toggle {
   width: 23px;
   height: 23px;
   background-color: #777;
@@ -142,21 +142,45 @@ body .todo-list .todo-item .todo-toggle {
   color: #00af00;
   font-weight: bold;
 }
-body .todo-list .todo-item .todo-title {
+body .todo-container .todo-list .todo-item .todo-title {
   margin-left: 15px;
   color: #fff;
   font-size: 21px;
 }
-body .todo-list .todo-item .todo-title.-done {
+body .todo-container .todo-list .todo-item .todo-title.-done {
   color: #777;
   font-style: italic;
   text-decoration: line-through;
 }
-body .todo-list .todo-item .remove-todo {
+body .todo-container .todo-list .todo-item .remove-todo {
   margin-left: auto;
   font-weight: bold;
   cursor: pointer;
   display: none;
   font-size: 21px;
   color: #970000;
+}
+body .todo-container .filter-buttons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #575757;
+  height: 30px;
+  padding: 0 20px;
+  color: #777;
+}
+body .todo-container .filter-buttons .todos-count {
+  font-size: 14px;
+}
+body .todo-container .filter-buttons .filter-btn {
+  margin-left: 50px;
+  cursor: pointer;
+}
+body .todo-container .filter-buttons .filter-btn.-active {
+  color: #fff;
+}
+body .todo-container .filter-buttons .remove-completed {
+  margin-left: 40px;
+  font-size: 14px;
+  cursor: pointer;
 }

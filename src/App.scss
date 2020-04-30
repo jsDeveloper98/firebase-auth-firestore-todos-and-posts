@@ -129,70 +129,99 @@ body {
       z-index: 10;
       border-bottom: 1px solid $border;
     }
-  }
 
-  .todo-list {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+    .todo-list {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
 
-    .loading-todos {
-      margin: 0 auto;
-      position: relative;
-      top: 100px;
+      .loading-todos {
+        margin: 0 auto;
+        position: relative;
+        top: 100px;
+      }
+
+      .todo-item {
+        width: 100%;
+        height: 55px;
+        background-color: $input;
+        display: flex;
+        align-items: center;
+        border-top: 1px solid $border;
+        border-bottom: 1px solid $border;
+        margin-top: -1px;
+        padding: 0 20px;
+
+        &:hover {
+          .remove-todo {
+            display: block;
+          }
+        }
+
+        .todo-toggle {
+          width: 23px;
+          height: 23px;
+          background-color: $text;
+          font-size: 21px;
+          border-radius: 100%;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: $green;
+          font-weight: bold;
+        }
+
+        .todo-title {
+          margin-left: 15px;
+          color: $white;
+          font-size: 21px;
+
+          &.-done {
+            color: $text;
+            font-style: italic;
+            text-decoration: line-through;
+          }
+        }
+
+        .remove-todo {
+          margin-left: auto;
+          font-weight: bold;
+          cursor: pointer;
+          display: none;
+          font-size: 21px;
+          color: $red;
+        }
+      }
     }
 
-    .todo-item {
+    .filter-buttons {
       width: 100%;
-      height: 55px;
-      background-color: $input;
       display: flex;
       align-items: center;
-      border-top: 1px solid $border;
-      border-bottom: 1px solid $border;
-      margin-top: -1px;
+      background-color: $input;
+      height: 30px;
       padding: 0 20px;
+      color: $text;
 
-      &:hover {
-        .remove-todo {
-          display: block;
+      .todos-count {
+        font-size: 14px;
+      }
+
+      .filter-btn {
+        margin-left: 50px;
+        cursor: pointer;
+
+        &.-active {
+          color: $white;
         }
       }
 
-      .todo-toggle {
-        width: 23px;
-        height: 23px;
-        background-color: $text;
-        font-size: 21px;
-        border-radius: 100%;
+      .remove-completed {
+        margin-left: 40px;
+        font-size: 14px;
         cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: $green;
-        font-weight: bold;
-      }
-
-      .todo-title {
-        margin-left: 15px;
-        color: $white;
-        font-size: 21px;
-
-        &.-done {
-          color: $text;
-          font-style: italic;
-          text-decoration: line-through;
-        }
-      }
-
-      .remove-todo {
-        margin-left: auto;
-        font-weight: bold;
-        cursor: pointer;
-        display: none;
-        font-size: 21px;
-        color: $red;
       }
     }
   }

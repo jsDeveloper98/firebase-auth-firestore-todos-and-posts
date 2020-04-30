@@ -3,13 +3,13 @@ import "./App.scss";
 import firebase from "./config/firebase";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import NavBar from "./components/navbar";
-import SignIn from "./components/sign-in";
-import SignUp from "./components/sign-up";
+import SignIn from "./components/auth/sign-in";
+import SignUp from "./components/auth/sign-up";
 import Home from "./components/home";
-import CreatePost from "./components/create-post";
-import Posts from "./components/posts";
-import PostDetails from "./components/post-details";
-import Todo from "./components/todo";
+import CreatePost from "./components/post/create-post";
+import Posts from "./components//post/posts";
+import PostDetails from "./components/post/post-details";
+import Todo from "./components/todo/todo";
 
 class App extends Component {
   state = {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Form, Button } from "react-bootstrap";
-import { createPost } from "../functions/post-functions";
+import { createPost } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
 
 class CreatePost extends Component {

@@ -1,5 +1,6 @@
 import firebase from "../config/firebase";
 const db = firebase.firestore();
+const _ = require("lodash");
 
 const createTodo = (title) => {
   return db.collection("todos").add({
@@ -27,11 +28,11 @@ const fetchTodos = () => {
 };
 
 const deleteTodo = (todo) => {
-  db.collection("todos").doc(todo.id).delete();
+  return db.collection("todos").doc(todo.id).delete();
 };
 
 const toggleCheck = (todo) => {
-  db.collection("todos").doc(todo.id).set(
+  return db.collection("todos").doc(todo.id).set(
     {
       done: !todo.done,
     },
@@ -39,4 +40,22 @@ const toggleCheck = (todo) => {
   );
 };
 
-export { createTodo, fetchTodos, deleteTodo, toggleCheck };
+const removeAllCompleted = () => {
+  return db
+    .collection("todos")
+    .get()
+    .then((res) =>
+      res.docs.map((doc) => {
+        if (doc.data().done) {
+          return doc.id;
+        }
+      })
+    )
+    .then((doneTodoIds) =>
+      _.compact(doneTodoIds).map((doneTodoId) => {
+        return db.collection("todos").doc(doneTodoId).delete();
+      })
+    );
+};
+
+export { createTodo, fetchTodos, deleteTodo, toggleCheck, removeAllCompleted };

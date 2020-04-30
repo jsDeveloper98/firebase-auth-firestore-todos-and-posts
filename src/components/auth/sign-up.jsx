@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import firebase from "../config/firebase";
+import firebase from "../../config/firebase";
 import { Form, Button } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 

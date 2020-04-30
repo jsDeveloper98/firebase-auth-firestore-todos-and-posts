@@ -1,18 +1,22 @@
 import React, { Component } from "react";
 import TodoList from "./todo-list";
+import FilterButtons from "./filter-buttons";
 import { Redirect } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import {
   createTodo,
   fetchTodos,
   deleteTodo,
-} from "../functions/todo-functions";
+  toggleCheck,
+  removeAllCompleted,
+} from "../../functions/todo-functions";
 
 class Todo extends Component {
   _isMounted = false;
   state = {
     todos: [],
     title: "",
+    filterParam: "all",
   };
 
   componentDidMount = () => {
@@ -45,6 +49,7 @@ class Todo extends Component {
           id: res.id,
           title,
           done: false,
+          createdAt: res.createdAt,
         };
 
         this.setState({
@@ -70,12 +75,51 @@ class Todo extends Component {
     this.setState({ todos });
   };
 
+  handleClick = (param) => {
+    this.setState({ filterParam: param });
+  };
+
+  removeCompletedTodos = () => {
+    removeAllCompleted().then(() => {
+      const todos = this.state.todos.filter((todo) => !todo.done);
+
+      this.setState({ todos });
+    });
+  };
+
+  toggleDone = (todo) => {
+    const { todos } = this.state;
+
+    toggleCheck(todo);
+
+    const changedTodo = todos.filter((item) => todo.id === item.id);
+    changedTodo[0].done = !changedTodo[0].done;
+
+    const changedTodoIndex = todos.indexOf(changedTodo[0]);
+    const newTodos = todos;
+
+    newTodos.splice(changedTodoIndex, 1, changedTodo[0]);
+
+    this.setState({ todos: newTodos });
+  };
+
   render() {
-    const { todos, title, loading } = this.state;
+    const { todos, title, loading, filterParam } = this.state;
 
     if (!this.props.user) {
       return <Redirect to="/signin" />;
     }
+
+    const filteredTodos = todos.filter((todo) => {
+      if (filterParam === "active") {
+        return !todo.done;
+      } else if (filterParam === "completed") {
+        return todo.done;
+      }
+      return todos;
+    });
+
+    const completedTodos = todos.filter((todo) => todo.done);
 
     return (
       <div className="todo-container">
@@ -97,9 +141,24 @@ class Todo extends Component {
               variant="secondary"
             />
           ) : (
-            <TodoList todos={todos} onRemove={this.removeTodo} />
+            <TodoList
+              todos={filteredTodos}
+              onRemove={this.removeTodo}
+              toggleDone={this.toggleDone}
+            />
           )}
         </div>
+        {todos.length ? (
+          <div className="filter-buttons">
+            <FilterButtons
+              filterParam={filterParam}
+              setFilter={this.handleClick}
+              filteredTodos={filteredTodos}
+              completedTodos={completedTodos}
+              removeCompletedTodos={this.removeCompletedTodos}
+            />
+          </div>
+        ) : null}
       </div>
     );
   }
