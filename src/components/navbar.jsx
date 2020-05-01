@@ -8,12 +8,12 @@ const NavBar = ({ logOut, user }) => {
       {user ? (
         <React.Fragment>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Navbar.Brand as={Link} to="/">
-              Home
-            </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
+                <Nav.Link as={Link} to="/">
+                  Home
+                </Nav.Link>
                 <Nav.Link as={Link} to="/createpost">
                   Create New Post
                 </Nav.Link>

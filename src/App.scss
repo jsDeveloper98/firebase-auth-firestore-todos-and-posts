@@ -17,7 +17,7 @@ body {
   background-color: $background !important;
 
   .form-settings {
-    width: 20%;
+    width: 380px;
     margin: 200px auto;
 
     .label-settings {
@@ -43,7 +43,7 @@ body {
   }
 
   .welcome-intro {
-    width: 40%;
+    width: 700px;
     text-align: center;
     margin: 200px auto;
     color: $text;
@@ -53,7 +53,7 @@ body {
     margin-top: 30px;
 
     .post-item {
-      width: 70%;
+      width: 777px;
       margin: 0 auto 30px auto;
       position: relative;
       word-wrap: break-word;
@@ -256,6 +256,62 @@ body {
         margin-left: 40px;
         font-size: 14px;
         cursor: pointer;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .post-item {
+    width: 100% !important;
+  }
+  .post-item-details {
+    width: 90% !important;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .welcome-intro {
+    width: 500px !important;
+    h1 {
+      font-size: 21px;
+    }
+    h3 {
+      font-size: 19px;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .todo-container {
+    width: 90% !important;
+
+    input {
+      height: 55px !important;
+      font-size: 21px !important;
+    }
+
+    .todo-header {
+      font-size: 80px !important;
+    }
+
+    .todo-item {
+      min-height: 45px !important;
+
+      .todo-title {
+        width: 300px !important;
+        font-size: 19px !important;
+      }
+    }
+
+    .filter-buttons {
+      .filter-btn {
+        font-size: 14px;
+        margin-left: 30px !important;
+      }
+
+      .remove-completed {
+        margin-left: 15px !important;
       }
     }
   }

@@ -2,18 +2,25 @@ import React, { Component } from "react";
 import firebase from "../../config/firebase";
 import { Form, Button } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
+import { createUser } from "../../functions/user-functions";
 
 class SignIn extends Component {
   state = {
+    username: "",
     email: "",
     password: "",
   };
 
   signUp = (e) => {
     e.preventDefault();
+    const { username, email, password } = this.state;
+
     firebase
       .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .createUserWithEmailAndPassword(email, password)
+      .then((user) => {
+        createUser(user, username);
+      })
       .then((user) => {
         console.log(user);
       })
@@ -29,7 +36,7 @@ class SignIn extends Component {
   };
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, username } = this.state;
 
     if (this.props.user) {
       return <Redirect to="/" />;
@@ -37,6 +44,19 @@ class SignIn extends Component {
 
     return (
       <Form className="form-settings">
+        <Form.Group controlId="formBasicUsername">
+          <Form.Label className="label-settings">Username</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Username"
+            name="username"
+            onChange={this.handleChange}
+            value={username}
+            className="input-settings"
+            autoComplete="off"
+          />
+        </Form.Group>
+
         <Form.Group controlId="formBasicEmail">
           <Form.Label className="label-settings">Email address</Form.Label>
           <Form.Control
@@ -48,9 +68,6 @@ class SignIn extends Component {
             autoComplete="off"
             className="input-settings"
           />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">

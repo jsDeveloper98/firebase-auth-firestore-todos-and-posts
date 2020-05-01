@@ -7,7 +7,7 @@ body {
   background-color: #222226 !important;
 }
 body .form-settings {
-  width: 20%;
+  width: 380px;
   margin: 200px auto;
 }
 body .form-settings .label-settings {
@@ -28,7 +28,7 @@ body .logout-btn {
   margin-top: 9px;
 }
 body .welcome-intro {
-  width: 40%;
+  width: 700px;
   text-align: center;
   margin: 200px auto;
   color: #777;
@@ -37,7 +37,7 @@ body .posts-list {
   margin-top: 30px;
 }
 body .posts-list .post-item {
-  width: 70%;
+  width: 777px;
   margin: 0 auto 30px auto;
   position: relative;
   word-wrap: break-word;
@@ -211,4 +211,49 @@ body .todo-container .filter-buttons .remove-completed {
   margin-left: 40px;
   font-size: 14px;
   cursor: pointer;
+}
+@media only screen and (max-width: 1000px) {
+  .post-item {
+    width: 100% !important;
+  }
+  .post-item-details {
+    width: 90% !important;
+  }
+}
+@media only screen and (max-width: 700px) {
+  .welcome-intro {
+    width: 500px !important;
+  }
+  .welcome-intro h1 {
+    font-size: 21px;
+  }
+  .welcome-intro h3 {
+    font-size: 19px;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .todo-container {
+    width: 90% !important;
+  }
+  .todo-container input {
+    height: 55px !important;
+    font-size: 21px !important;
+  }
+  .todo-container .todo-header {
+    font-size: 80px !important;
+  }
+  .todo-container .todo-item {
+    min-height: 45px !important;
+  }
+  .todo-container .todo-item .todo-title {
+    width: 300px !important;
+    font-size: 19px !important;
+  }
+  .todo-container .filter-buttons .filter-btn {
+    font-size: 14px;
+    margin-left: 30px !important;
+  }
+  .todo-container .filter-buttons .remove-completed {
+    margin-left: 15px !important;
+  }
 }
