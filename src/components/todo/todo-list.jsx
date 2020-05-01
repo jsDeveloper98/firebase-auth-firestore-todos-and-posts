@@ -1,16 +1,16 @@
 import React from "react";
 import TodoItem from "./todo-item";
 
-const TodoList = (props) => {
+const TodoList = ({ onRemove, todos, toggleDone }) => {
   return (
     <React.Fragment>
-      {props.todos.map((todo, i) => (
+      {todos.map((todo, i) => (
         <div className="todo-item" key={i}>
           <TodoItem
             key={todo.id}
             todo={todo}
-            onRemove={props.onRemove}
-            toggleDone={props.toggleDone}
+            onRemove={onRemove}
+            toggleDone={toggleDone}
           />
         </div>
       ))}

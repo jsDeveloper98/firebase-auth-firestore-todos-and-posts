@@ -72,9 +72,15 @@ body .post-item-jumbotron .post-title {
   overflow: hidden;
   color: #fff;
 }
-body .post-item-jumbotron .post-decription {
+body .post-item-jumbotron .post-detail-title {
+  color: #fff;
+}
+body .post-item-jumbotron .post-description {
   max-height: 70px;
   overflow: hidden;
+  color: #fff;
+}
+body .post-item-jumbotron .post-detail-description {
   color: #fff;
 }
 body .empty-posts {
@@ -83,11 +89,31 @@ body .empty-posts {
   margin-top: 250px;
 }
 body .todo-container {
-  width: 30%;
+  width: 580px;
   margin: 20px auto;
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+body .todo-container .input-container {
+  position: relative;
+  width: 100%;
+}
+body .todo-container .input-container .arrow {
+  border: solid #777;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 6px;
+}
+body .todo-container .input-container .down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+body .todo-container .input-container i {
+  position: absolute;
+  top: calc(50% - 10.5px);
+  left: 20px;
+  cursor: pointer;
 }
 body .todo-container .todo-header {
   color: #777;
@@ -95,11 +121,11 @@ body .todo-container .todo-header {
 }
 body .todo-container input {
   width: 100%;
-  height: 60px;
+  height: 65px;
   background-color: #575757;
   border: none;
   font-size: 23px;
-  padding: 0 20px;
+  padding: 0 50px;
   color: #fff;
   z-index: 10;
   border-bottom: 1px solid #444446;
@@ -117,14 +143,14 @@ body .todo-container .todo-list .loading-todos {
 }
 body .todo-container .todo-list .todo-item {
   width: 100%;
-  height: 55px;
+  min-height: 55px;
   background-color: #575757;
   display: flex;
   align-items: center;
   border-top: 1px solid #444446;
   border-bottom: 1px solid #444446;
   margin-top: -1px;
-  padding: 0 20px;
+  padding: 5px 20px;
 }
 body .todo-container .todo-list .todo-item:hover .remove-todo {
   display: block;
@@ -146,6 +172,8 @@ body .todo-container .todo-list .todo-item .todo-title {
   margin-left: 15px;
   color: #fff;
   font-size: 21px;
+  width: 470px;
+  word-wrap: break-word;
 }
 body .todo-container .todo-list .todo-item .todo-title.-done {
   color: #777;

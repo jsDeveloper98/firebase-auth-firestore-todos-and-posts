@@ -1,13 +1,13 @@
 import React from "react";
 
-const TodoItem = (props) => {
+const TodoItem = ({ onRemove, todo, toggleDone }) => {
   return (
     <React.Fragment>
-      <div className="todo-toggle" onClick={() => props.toggleDone(props.todo)}>
-        {props.todo.done ? <span>✓</span> : null}
+      <div className="todo-toggle" onClick={() => toggleDone(todo)}>
+        {todo.done ? <span>✓</span> : null}
       </div>
-      <div className={doneTodo(props)}>{props.todo.title}</div>
-      <div className="remove-todo" onClick={() => props.onRemove(props.todo)}>
+      <div className={doneTodo(todo)}>{todo.title}</div>
+      <div className="remove-todo" onClick={() => onRemove(todo)}>
         ✗
       </div>
     </React.Fragment>
@@ -16,8 +16,8 @@ const TodoItem = (props) => {
 
 export default TodoItem;
 
-function doneTodo(props) {
+function doneTodo(todo) {
   let classes = "todo-title";
-  classes += props.todo.done ? " -done" : "";
+  classes += todo.done ? " -done" : "";
   return classes;
 }

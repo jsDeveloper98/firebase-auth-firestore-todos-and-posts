@@ -8,8 +8,8 @@ const PostDetails = ({ location }) => {
   return (
     <div className="post-item-details">
       <Jumbotron className="post-item-jumbotron">
-        <h1 className="post-title">{selectedPost.title}</h1>
-        <p className="post-decription">{selectedPost.description}</p>
+        <h1 className="post-detail-title">{selectedPost.title}</h1>
+        <p className="post-detail-description">{selectedPost.description}</p>
         <Link to="/posts">
           <Button className="close-post-btn" variant="secondary">
             Close Post

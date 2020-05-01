@@ -1,29 +1,32 @@
 import React from "react";
 
-const FilterButtons = (props) => {
+const FilterButtons = ({
+  completedTodos,
+  filterParam,
+  filteredTodos,
+  removeCompletedTodos,
+  setFilter,
+}) => {
   return (
     <React.Fragment>
-      <div className="todos-count">{props.filteredTodos.length} items</div>
-      <div
-        className={activeAll(props.filterParam)}
-        onClick={() => props.setFilter("all")}
-      >
+      <div className="todos-count">{filteredTodos.length} items</div>
+      <div className={activeAll(filterParam)} onClick={() => setFilter("all")}>
         All
       </div>
       <div
-        className={activeNotCompleted(props.filterParam)}
-        onClick={() => props.setFilter("active")}
+        className={activeNotCompleted(filterParam)}
+        onClick={() => setFilter("active")}
       >
         Active
       </div>
       <div
-        className={activeCompleted(props.filterParam)}
-        onClick={() => props.setFilter("completed")}
+        className={activeCompleted(filterParam)}
+        onClick={() => setFilter("completed")}
       >
         Completed
       </div>
-      {props.completedTodos.length ? (
-        <div className="remove-completed" onClick={props.removeCompletedTodos}>
+      {completedTodos.length ? (
+        <div className="remove-completed" onClick={removeCompletedTodos}>
           Remove completed
         </div>
       ) : null}

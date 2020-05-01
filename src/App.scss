@@ -93,9 +93,17 @@ body {
       color: $white;
     }
 
-    .post-decription {
+    .post-detail-title {
+      color: $white;
+    }
+
+    .post-description {
       max-height: 70px;
       overflow: hidden;
+      color: $white;
+    }
+
+    .post-detail-description {
       color: $white;
     }
   }
@@ -107,11 +115,35 @@ body {
   }
 
   .todo-container {
-    width: 30%;
+    width: 580px;
     margin: 20px auto;
     display: flex;
     align-items: center;
     flex-direction: column;
+
+    .input-container {
+      position: relative;
+      width: 100%;
+
+      .arrow {
+        border: solid $text;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 6px;
+      }
+
+      .down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+      }
+
+      i {
+        position: absolute;
+        top: calc(50% - 10.5px);
+        left: 20px;
+        cursor: pointer;
+      }
+    }
 
     .todo-header {
       color: $text;
@@ -120,11 +152,11 @@ body {
 
     input {
       width: 100%;
-      height: 60px;
+      height: 65px;
       background-color: $input;
       border: none;
       font-size: 23px;
-      padding: 0 20px;
+      padding: 0 50px;
       color: $white;
       z-index: 10;
       border-bottom: 1px solid $border;
@@ -144,14 +176,14 @@ body {
 
       .todo-item {
         width: 100%;
-        height: 55px;
+        min-height: 55px;
         background-color: $input;
         display: flex;
         align-items: center;
         border-top: 1px solid $border;
         border-bottom: 1px solid $border;
         margin-top: -1px;
-        padding: 0 20px;
+        padding: 5px 20px;
 
         &:hover {
           .remove-todo {
@@ -177,6 +209,8 @@ body {
           margin-left: 15px;
           color: $white;
           font-size: 21px;
+          width: 470px;
+          word-wrap: break-word;
 
           &.-done {
             color: $text;

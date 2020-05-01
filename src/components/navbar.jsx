@@ -2,10 +2,10 @@ import React from "react";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const NavBar = (props) => {
+const NavBar = ({ logOut, user }) => {
   return (
     <React.Fragment>
-      {props.user ? (
+      {user ? (
         <React.Fragment>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Brand as={Link} to="/">
@@ -26,7 +26,7 @@ const NavBar = (props) => {
               </Nav>
             </Navbar.Collapse>
           </Navbar>
-          <Button className="logout-btn" variant="dark" onClick={props.logOut}>
+          <Button className="logout-btn" variant="dark" onClick={logOut}>
             Log Out
           </Button>
         </React.Fragment>
