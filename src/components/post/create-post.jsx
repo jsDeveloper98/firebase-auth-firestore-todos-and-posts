@@ -20,7 +20,7 @@ class CreatePost extends Component {
     const { title, description } = this.state;
 
     if (title && description) {
-      createPost(title, description);
+      createPost(title, description, this.props.user);
     }
     this.setState({
       title: "",

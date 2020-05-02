@@ -11,6 +11,7 @@ import {
   removeAllCompleted,
   completeAllTodos,
 } from "../../functions/todo-functions";
+const _ = require("lodash");
 
 class Todo extends Component {
   _isMounted = false;
@@ -22,16 +23,19 @@ class Todo extends Component {
 
   componentDidMount = () => {
     this._isMounted = true;
+    const { user } = this.props;
 
     this.setState({ loading: true }, () => {
-      fetchTodos().then((todos) => {
-        if (this._isMounted) {
-          this.setState({
-            todos,
-            loading: false,
-          });
-        }
-      });
+      if (!_.isEmpty(user)) {
+        fetchTodos(user).then((todos) => {
+          if (this._isMounted) {
+            this.setState({
+              todos,
+              loading: false,
+            });
+          }
+        });
+      }
     });
   };
 
@@ -43,14 +47,16 @@ class Todo extends Component {
 
   handleKeyDown = (e) => {
     const { todos, title } = this.state;
+    const { user } = this.props;
 
     if (e.key === "Enter" && title) {
-      createTodo(title).then((res) => {
+      createTodo(title, user).then((res) => {
         const todo = {
           id: res.id,
           title,
           done: false,
           createdAt: res.createdAt,
+          user: user.uid,
         };
 
         this.setState({

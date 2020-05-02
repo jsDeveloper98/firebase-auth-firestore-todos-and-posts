@@ -35,6 +35,18 @@ body .welcome-intro {
 }
 body .posts-list {
   margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+body .posts-list .search-posts {
+  margin: 20px auto 40px auto;
+  width: 350px;
+  height: 40px;
+  background-color: #575757;
+  border: none;
+  padding: 0 20px;
+  font-size: 18px;
+  color: #fff;
 }
 body .posts-list .post-item {
   width: 777px;

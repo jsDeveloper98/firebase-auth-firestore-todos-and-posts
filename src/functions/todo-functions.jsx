@@ -1,17 +1,19 @@
 import firebase from "../config/firebase";
 const db = firebase.firestore();
 
-const createTodo = (title) => {
+const createTodo = (title, user) => {
   return db.collection("todos").add({
     title,
     done: false,
     createdAt: new Date(),
+    user: user.uid,
   });
 };
 
-const fetchTodos = () => {
+const fetchTodos = (user) => {
   return db
     .collection("todos")
+    .where("user", "==", user.uid)
     .orderBy("createdAt", "desc")
     .get()
     .then((res) =>
@@ -21,6 +23,7 @@ const fetchTodos = () => {
           title: doc.data().title,
           done: doc.data().done,
           createdAt: doc.data().createdAt,
+          user: doc.data().user,
         };
       })
     );

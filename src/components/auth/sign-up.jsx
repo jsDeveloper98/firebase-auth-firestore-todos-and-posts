@@ -20,8 +20,6 @@ class SignIn extends Component {
       .createUserWithEmailAndPassword(email, password)
       .then((user) => {
         createUser(user, username);
-      })
-      .then((user) => {
         console.log(user);
       })
       .catch((err) => {

@@ -3,25 +3,30 @@ import Post from "./post";
 import { fetchPosts, deletePost } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
+const _ = require("lodash");
 
 class Posts extends Component {
   _isMounted = false;
   state = {
     posts: [],
+    search: "",
   };
 
   componentDidMount = () => {
     this._isMounted = true;
+    const { user } = this.props;
 
     this.setState({ loading: true }, () => {
-      fetchPosts().then((posts) => {
-        if (this._isMounted) {
-          this.setState({
-            posts,
-            loading: false,
-          });
-        }
-      });
+      if (!_.isEmpty(user)) {
+        fetchPosts(user).then((posts) => {
+          if (this._isMounted) {
+            this.setState({
+              posts,
+              loading: false,
+            });
+          }
+        });
+      }
     });
   };
 
@@ -37,18 +42,45 @@ class Posts extends Component {
     this.setState({ posts });
   };
 
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
   render() {
-    const { posts } = this.state;
+    const { posts, search } = this.state;
 
     if (!this.props.user) {
       return <Redirect to="/signin" />;
     }
 
+    const filteredPosts = posts.filter((post) => {
+      if (!search) {
+        return [];
+      } else {
+        return (
+          post.title.indexOf(search) > -1 ||
+          post.description.indexOf(search) > -1
+        );
+      }
+    });
+
     return (
       <React.Fragment>
         {posts.length ? (
           <div className="container posts-list">
-            {posts.map((post, i) => (
+            <input
+              type="search"
+              placeholder="Search Post by Title or Description..."
+              className="search-posts"
+              autoComplete="off"
+              value={this.state.search}
+              onChange={this.handleChange}
+              name="search"
+            />
+
+            {filteredPosts.map((post, i) => (
               <div className="post-item" key={i}>
                 <Post
                   key={post.id}
