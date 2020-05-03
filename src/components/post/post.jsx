@@ -21,10 +21,17 @@ const Post = ({ onRemove, post, user }) => {
       >
         <Button variant="secondary">Open Post</Button>
       </Link>
+      {post.user !== user.uid ? (
+        <div className="author">Created by {post.authorName}</div>
+      ) : (
+        <div className="author">Created by You</div>
+      )}
 
-      <div className="remove-post" onClick={() => onRemove(post)}>
-        ✗
-      </div>
+      {post.user === user.uid ? (
+        <div className="remove-post" onClick={() => onRemove(post)}>
+          ✗
+        </div>
+      ) : null}
     </Jumbotron>
   );
 };

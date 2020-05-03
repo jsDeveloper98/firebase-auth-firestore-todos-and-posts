@@ -2,18 +2,25 @@ import firebase from "../config/firebase";
 const db = firebase.firestore();
 
 const createPost = (title, description, user) => {
-  return db.collection("posts").add({
-    title,
-    description,
-    createdAt: new Date(),
-    user: user.uid,
-  });
+  return db
+    .collection("users")
+    .where("uid", "==", user.uid)
+    .get()
+    .then((res) => res.docs.map((doc) => doc.data().username))
+    .then((username) => {
+      return db.collection("posts").add({
+        title,
+        description,
+        createdAt: new Date(),
+        user: user.uid,
+        authorName: username[0],
+      });
+    });
 };
 
-const fetchPosts = (user) => {
+const fetchPosts = () => {
   return db
     .collection("posts")
-    .where("user", "==", user.uid)
     .orderBy("createdAt", "desc")
     .get()
     .then((res) =>
@@ -24,6 +31,7 @@ const fetchPosts = (user) => {
           description: doc.data().description,
           createdAt: doc.data().createdAt,
           user: doc.data().user,
+          authorName: doc.data().authorName,
         };
       })
     );

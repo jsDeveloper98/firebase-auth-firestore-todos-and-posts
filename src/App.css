@@ -33,13 +33,19 @@ body .welcome-intro {
   margin: 200px auto;
   color: #777;
 }
-body .posts-list {
-  margin-top: 30px;
+body .posts {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
-body .posts-list .search-posts {
-  margin: 20px auto 40px auto;
+body .posts .post-filters {
+  width: 777px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+body .posts .post-filters .search-posts {
+  margin: 40px auto 20px auto;
   width: 350px;
   height: 40px;
   background-color: #575757;
@@ -48,7 +54,77 @@ body .posts-list .search-posts {
   font-size: 18px;
   color: #fff;
 }
-body .posts-list .post-item {
+body .posts .post-filters .filter-posts-label {
+  color: #777;
+  position: absolute;
+  right: 0;
+  margin-top: 2px;
+}
+body .posts .post-filters label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: -3px;
+  position: absolute;
+  right: 65px;
+  top: 45px;
+}
+body .posts .post-filters .label-text {
+  margin-left: 8px;
+}
+body .posts .post-filters .toggle {
+  isolation: isolate;
+  position: relative;
+  height: 30px;
+  width: 54px;
+  border-radius: 15px;
+  background: #575757;
+  overflow: hidden;
+  transform: scale(0.8);
+}
+body .posts .post-filters .toggle-inner {
+  z-index: 2;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  height: 28px;
+  width: 52px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+body .posts .post-filters .active-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 200%;
+  background: #575757;
+  transform: translate3d(-100%, 0, 0);
+  transition: transform 0.05s linear 0.17s;
+}
+body .posts .post-filters .toggle-state {
+  display: none;
+}
+body .posts .post-filters .indicator {
+  height: 100%;
+  width: 200%;
+  background: #777;
+  border-radius: 13px;
+  transform: translate3d(-75%, 0, 0);
+  transition: transform 0.35s cubic-bezier(0.85, 0.05, 0.18, 1.35);
+}
+body .posts .post-filters .toggle-state:checked ~ .active-bg {
+  transform: translate3d(-50%, 0, 0);
+}
+body .posts .post-filters .toggle-state:checked ~ .toggle-inner .indicator {
+  transform: translate3d(25%, 0, 0);
+}
+body .posts .posts-list {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+body .posts .posts-list .post-item {
   width: 777px;
   margin: 0 auto 30px auto;
   position: relative;
@@ -56,7 +132,10 @@ body .posts-list .post-item {
   max-height: 278px;
   overflow: hidden;
 }
-body .posts-list .post-item .remove-post {
+body .posts .posts-list .post-item:hover .remove-post {
+  display: block;
+}
+body .posts .posts-list .post-item .remove-post {
   position: absolute;
   top: 10px;
   right: 15px;
@@ -64,38 +143,9 @@ body .posts-list .post-item .remove-post {
   font-weight: bold;
   cursor: pointer;
   color: #970000;
+  display: none;
 }
-body .post-item-details {
-  width: 777px;
-  margin: 30px auto 0 auto;
-  position: relative;
-  word-wrap: break-word;
-}
-body .post-item-details .close-post-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-}
-body .post-item-jumbotron {
-  background-color: #575757 !important;
-}
-body .post-item-jumbotron .post-title {
-  max-height: 50px;
-  overflow: hidden;
-  color: #fff;
-}
-body .post-item-jumbotron .post-detail-title {
-  color: #fff;
-}
-body .post-item-jumbotron .post-description {
-  max-height: 70px;
-  overflow: hidden;
-  color: #fff;
-}
-body .post-item-jumbotron .post-detail-description {
-  color: #fff;
-}
-body .empty-posts {
+body .posts .empty-posts {
   color: #777;
   text-align: center;
   margin-top: 250px;
@@ -223,6 +273,59 @@ body .todo-container .filter-buttons .remove-completed {
   margin-left: 40px;
   font-size: 14px;
   cursor: pointer;
+}
+body .post-item-details {
+  width: 777px;
+  margin: 30px auto 0 auto;
+  position: relative;
+  word-wrap: break-word;
+}
+body .post-item-details .close-post-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+body .post-detail-jumbotron {
+  background-color: #575757 !important;
+}
+body .post-detail-jumbotron .post-detail-title {
+  color: #fff;
+}
+body .post-detail-jumbotron .post-detail-description {
+  color: #fff;
+}
+body .post-item-jumbotron {
+  background-color: #575757 !important;
+  max-height: 278px;
+  position: relative;
+}
+body .post-item-jumbotron .post-title {
+  max-height: 50px;
+  overflow: hidden;
+  color: #fff;
+}
+body .post-item-jumbotron .post-description {
+  max-height: 70px;
+  overflow: hidden;
+  color: #fff;
+}
+body .post-item-jumbotron .author {
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+  color: #777;
+  font-size: 17px;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #222226;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #575757;
+  border-radius: 10px;
 }
 @media only screen and (max-width: 1000px) {
   .post-item {

@@ -3,30 +3,27 @@ import Post from "./post";
 import { fetchPosts, deletePost } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
-const _ = require("lodash");
 
 class Posts extends Component {
   _isMounted = false;
   state = {
     posts: [],
     search: "",
+    filterPosts: false,
   };
 
   componentDidMount = () => {
     this._isMounted = true;
-    const { user } = this.props;
 
     this.setState({ loading: true }, () => {
-      if (!_.isEmpty(user)) {
-        fetchPosts(user).then((posts) => {
-          if (this._isMounted) {
-            this.setState({
-              posts,
-              loading: false,
-            });
-          }
-        });
-      }
+      fetchPosts().then((posts) => {
+        if (this._isMounted) {
+          this.setState({
+            posts,
+            loading: false,
+          });
+        }
+      });
     });
   };
 
@@ -48,38 +45,72 @@ class Posts extends Component {
     });
   };
 
+  handleCheck = (e) => {
+    this.setState({
+      filterPosts: !this.state.filterPosts,
+    });
+  };
+
   render() {
-    const { posts, search } = this.state;
+    const { posts, search, loading, filterPosts } = this.state;
 
     if (!this.props.user) {
       return <Redirect to="/signin" />;
     }
 
-    const filteredPosts = posts.filter((post) => {
+    const selectedPosts = posts.filter((post) => {
+      if (filterPosts) {
+        return post.user === this.props.user.uid;
+      } else {
+        return posts;
+      }
+    });
+
+    const filteredPosts = selectedPosts.filter((post) => {
       if (!search) {
         return [];
       } else {
         return (
-          post.title.indexOf(search) > -1 ||
-          post.description.indexOf(search) > -1
+          post.title.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
+          post.description.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
+          post.authorName.toLowerCase().indexOf(search.toLowerCase()) > -1
         );
       }
     });
 
     return (
-      <React.Fragment>
-        {posts.length ? (
-          <div className="container posts-list">
-            <input
-              type="search"
-              placeholder="Search Post by Title or Description..."
-              className="search-posts"
-              autoComplete="off"
-              value={this.state.search}
-              onChange={this.handleChange}
-              name="search"
-            />
+      <div className="posts">
+        <div className="container post-filters">
+          <input
+            type="search"
+            placeholder="Search Post by Title or Description..."
+            className="search-posts"
+            autoComplete="off"
+            value={this.state.search}
+            onChange={this.handleChange}
+            name="search"
+          />
 
+          <label className="filter-posts-label">My Posts</label>
+
+          <label>
+            <div className="toggle">
+              <input
+                className="toggle-state"
+                type="checkbox"
+                onChange={this.handleCheck}
+              />
+              <div className="toggle-inner">
+                <div className="indicator"></div>
+              </div>
+              <div className="active-bg"></div>
+            </div>
+            <div className="label-text"></div>
+          </label>
+        </div>
+
+        {filteredPosts.length ? (
+          <div className="container posts-list">
             {filteredPosts.map((post, i) => (
               <div className="post-item" key={i}>
                 <Post
@@ -93,14 +124,16 @@ class Posts extends Component {
           </div>
         ) : (
           <div className="empty-posts">
-            {this.state.loading ? (
+            {loading ? (
               <Spinner animation="border" variant="secondary" />
             ) : (
-              <h1>No Posts</h1>
+              <React.Fragment>
+                {!search ? <h1>No Posts</h1> : <h1>No Search Result</h1>}
+              </React.Fragment>
             )}
           </div>
         )}
-      </React.Fragment>
+      </div>
     );
   }
 }
