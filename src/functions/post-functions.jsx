@@ -41,4 +41,14 @@ const deletePost = (post) => {
   return db.collection("posts").doc(post.id).delete();
 };
 
-export { createPost, fetchPosts, deletePost };
+const updatePost = (post, title, description) => {
+  return db.collection("posts").doc(post.id).set(
+    {
+      title,
+      description,
+    },
+    { merge: true }
+  );
+};
+
+export { createPost, fetchPosts, deletePost, updatePost };

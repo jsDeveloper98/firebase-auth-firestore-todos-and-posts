@@ -1,8 +1,9 @@
 import React from "react";
 import { Jumbotron, Button } from "react-bootstrap";
 import { Link, Redirect } from "react-router-dom";
+import editIcon from "../../images/edit.png";
 
-const Post = ({ onRemove, post, user }) => {
+const Post = ({ onEdit, onRemove, post, user }) => {
   if (!user) {
     return <Redirect to="/signin" />;
   }
@@ -28,8 +29,16 @@ const Post = ({ onRemove, post, user }) => {
       )}
 
       {post.user === user.uid ? (
-        <div className="remove-post" onClick={() => onRemove(post)}>
-          ✗
+        <div className="post-settings">
+          <img
+            className="edit-post"
+            src={editIcon}
+            alt="edit"
+            onClick={() => onEdit(post)}
+          />
+          <div className="remove-post" onClick={() => onRemove(post)}>
+            ✗
+          </div>
         </div>
       ) : null}
     </Jumbotron>

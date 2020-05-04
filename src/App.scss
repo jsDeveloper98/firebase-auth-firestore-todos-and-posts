@@ -11,6 +11,7 @@ $border: #444446;
 $white: white;
 $red: rgb(151, 0, 0);
 $green: rgb(0, 175, 0);
+$secondTextColor: rgb(161, 161, 161);
 
 body {
   background-color: $background !important;
@@ -161,20 +162,40 @@ body {
         overflow: hidden;
 
         &:hover {
-          .remove-post {
-            display: block;
+          .post-settings {
+            .remove-post {
+              display: block;
+            }
+
+            .edit-post {
+              display: block;
+            }
           }
         }
 
-        .remove-post {
+        .post-settings {
           position: absolute;
           top: 10px;
           right: 15px;
-          font-size: 25px;
-          font-weight: bold;
-          cursor: pointer;
-          color: $red;
-          display: none;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .remove-post {
+            font-size: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            color: $red;
+            display: none;
+          }
+
+          .edit-post {
+            width: 22px;
+            margin-right: 7px;
+            margin-bottom: 2.5px;
+            display: none;
+            cursor: pointer;
+          }
         }
       }
     }
@@ -383,6 +404,52 @@ body {
       font-size: 17px;
     }
   }
+
+  .modal-bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(34, 34, 38, 0.8);
+
+    .edit-post-modal {
+      top: calc(50vh - 155px);
+      left: calc(50% - 225px);
+      width: 450px;
+      position: absolute;
+
+      .modal-content {
+        background-color: $input;
+
+        .modal-header {
+          border-color: $border;
+        }
+
+        .modal-footer {
+          border-color: $border;
+        }
+
+        .edit-post-input {
+          border: none;
+          outline: none;
+          background-color: $text;
+          height: 30px;
+          width: 90%;
+          color: $white;
+          padding: 0 10px;
+
+          &::placeholder {
+            color: $secondTextColor;
+          }
+        }
+      }
+    }
+  }
+  .-disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -405,6 +472,17 @@ body {
   }
   .post-item-details {
     width: 90% !important;
+  }
+}
+
+@media only screen and (max-width: 770px) {
+  .post-filters {
+    justify-content: start !important;
+    align-items: flex-start !important;
+
+    .search-posts {
+      margin: 40px 0 20px 0 !important;
+    }
   }
 }
 
@@ -451,6 +529,12 @@ body {
       .remove-completed {
         margin-left: 15px !important;
       }
+    }
+  }
+
+  .posts {
+    .post-filters {
+      position: static !important;
     }
   }
 }

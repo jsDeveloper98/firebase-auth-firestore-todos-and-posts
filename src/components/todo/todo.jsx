@@ -112,7 +112,7 @@ class Todo extends Component {
           id: item.id,
           title: item.title,
           done: !item.done,
-          createAt: item.createdAt,
+          createdAt: item.createdAt,
         };
       } else {
         return item;

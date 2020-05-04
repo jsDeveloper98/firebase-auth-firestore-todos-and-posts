@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import Post from "./post";
-import { fetchPosts, deletePost } from "../../functions/post-functions";
+import {
+  fetchPosts,
+  deletePost,
+  updatePost,
+} from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Modal, Button } from "react-bootstrap";
 
 class Posts extends Component {
   _isMounted = false;
@@ -10,6 +14,10 @@ class Posts extends Component {
     posts: [],
     search: "",
     filterPosts: false,
+    showEdit: false,
+    postToEdit: null,
+    changedTitle: "",
+    changedDescription: "",
   };
 
   componentDidMount = () => {
@@ -39,6 +47,46 @@ class Posts extends Component {
     this.setState({ posts });
   };
 
+  showEditModal = (post) => {
+    this.setState({
+      showEdit: true,
+      postToEdit: post,
+    });
+  };
+
+  hideEditModal = () => {
+    this.setState({
+      showEdit: false,
+      postToEdit: null,
+    });
+  };
+
+  editPost = () => {
+    const { postToEdit, changedTitle, changedDescription, posts } = this.state;
+
+    updatePost(postToEdit, changedTitle, changedDescription);
+
+    const newPosts = posts.map((post) => {
+      if (postToEdit.id === post.id) {
+        return {
+          id: post.id,
+          title: changedTitle,
+          description: changedDescription,
+          createdAt: post.createdAt,
+          user: post.user,
+        };
+      } else {
+        return post;
+      }
+    });
+
+    this.setState({
+      posts: newPosts,
+      postToEdit: null,
+      showEdit: false,
+    });
+  };
+
   handleChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
@@ -52,7 +100,15 @@ class Posts extends Component {
   };
 
   render() {
-    const { posts, search, loading, filterPosts } = this.state;
+    const {
+      posts,
+      search,
+      loading,
+      filterPosts,
+      showEdit,
+      changedTitle,
+      changedDescription,
+    } = this.state;
 
     if (!this.props.user) {
       return <Redirect to="/signin" />;
@@ -79,62 +135,113 @@ class Posts extends Component {
     });
 
     return (
-      <div className="posts">
-        <div className="container post-filters">
-          <input
-            type="search"
-            placeholder="Search Post by Title or Description..."
-            className="search-posts"
-            autoComplete="off"
-            value={this.state.search}
-            onChange={this.handleChange}
-            name="search"
-          />
+      <React.Fragment>
+        <div className="posts">
+          <div className="container post-filters">
+            <input
+              type="search"
+              placeholder="Search Post by Title or Description..."
+              className="search-posts"
+              autoComplete="off"
+              value={this.state.search}
+              onChange={this.handleChange}
+              name="search"
+            />
 
-          <label className="filter-posts-label">My Posts</label>
+            <label className="filter-posts-label">My Posts</label>
 
-          <label>
-            <div className="toggle">
-              <input
-                className="toggle-state"
-                type="checkbox"
-                onChange={this.handleCheck}
-              />
-              <div className="toggle-inner">
-                <div className="indicator"></div>
-              </div>
-              <div className="active-bg"></div>
-            </div>
-            <div className="label-text"></div>
-          </label>
-        </div>
-
-        {filteredPosts.length ? (
-          <div className="container posts-list">
-            {filteredPosts.map((post, i) => (
-              <div className="post-item" key={i}>
-                <Post
-                  key={post.id}
-                  post={post}
-                  user={this.props.user}
-                  onRemove={this.removePost}
+            <label>
+              <div className="toggle">
+                <input
+                  className="toggle-state"
+                  type="checkbox"
+                  onChange={this.handleCheck}
                 />
+                <div className="toggle-inner">
+                  <div className="indicator"></div>
+                </div>
+                <div className="active-bg"></div>
               </div>
-            ))}
+              <div className="label-text"></div>
+            </label>
           </div>
-        ) : (
-          <div className="empty-posts">
-            {loading ? (
-              <Spinner animation="border" variant="secondary" />
-            ) : (
-              <React.Fragment>
-                {!search ? <h1>No Posts</h1> : <h1>No Search Result</h1>}
-              </React.Fragment>
-            )}
+
+          {filteredPosts.length ? (
+            <div className="container posts-list">
+              {filteredPosts.map((post, i) => (
+                <div className="post-item" key={i}>
+                  <Post
+                    key={post.id}
+                    post={post}
+                    user={this.props.user}
+                    onRemove={this.removePost}
+                    onEdit={this.showEditModal}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-posts">
+              {loading ? (
+                <Spinner animation="border" variant="secondary" />
+              ) : (
+                <React.Fragment>
+                  {!search ? <h1>No Posts</h1> : <h1>No Search Result</h1>}
+                </React.Fragment>
+              )}
+            </div>
+          )}
+        </div>
+        {showEdit ? (
+          <div className="modal-bg">
+            <Modal.Dialog className="edit-post-modal">
+              <Modal.Header>
+                <input
+                  type="text"
+                  className="edit-post-input"
+                  onChange={this.handleChange}
+                  value={this.state.changedTitle}
+                  name="changedTitle"
+                  placeholder="Title"
+                  autoComplete="off"
+                />
+              </Modal.Header>
+
+              <Modal.Body>
+                <input
+                  type="text"
+                  className="edit-post-input"
+                  onChange={this.handleChange}
+                  value={this.state.changedDescription}
+                  name="changedDescription"
+                  placeholder="Description"
+                  autoComplete="off"
+                />
+              </Modal.Body>
+
+              <Modal.Footer>
+                <Button variant="secondary" onClick={this.hideEditModal}>
+                  Close
+                </Button>
+                <Button
+                  variant="primary"
+                  className={this.disableBtn(changedTitle, changedDescription)}
+                  onClick={this.editPost}
+                >
+                  Save changes
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
           </div>
-        )}
-      </div>
+        ) : null}
+      </React.Fragment>
     );
+  }
+
+  disableBtn(changedTitle, changedDescription) {
+    let classes = "";
+    classes += changedTitle && changedDescription ? "" : " -disabled";
+    return classes;
   }
 }
 

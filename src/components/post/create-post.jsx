@@ -63,7 +63,7 @@ class CreatePost extends Component {
           />
         </Form.Group>
         <Button
-          className="form-button"
+          className={this.disableBtn(title, description)}
           variant="secondary"
           type="submit"
           onClick={this.createPost}
@@ -72,6 +72,12 @@ class CreatePost extends Component {
         </Button>
       </Form>
     );
+  }
+
+  disableBtn(title, description) {
+    let classes = "form-button";
+    classes += title && description ? "" : " -disabled";
+    return classes;
   }
 }
 
