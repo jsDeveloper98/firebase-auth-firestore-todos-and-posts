@@ -23,6 +23,9 @@ const NavBar = ({ logOut, user }) => {
                 <Nav.Link as={Link} to="/todo">
                   Todo List
                 </Nav.Link>
+                <Nav.Link as={Link} to="/chat">
+                  Chat
+                </Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Navbar>

@@ -7,6 +7,9 @@ import {
 } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
 import { Spinner, Modal, Button } from "react-bootstrap";
+import firebase from "../../config/firebase";
+const _ = require("lodash");
+const db = firebase.firestore();
 
 class Posts extends Component {
   _isMounted = false;
@@ -16,6 +19,7 @@ class Posts extends Component {
     filterPosts: false,
     showEdit: false,
     postToEdit: null,
+    unsubscribePosts: null,
     changedTitle: "",
     changedDescription: "",
   };
@@ -24,6 +28,10 @@ class Posts extends Component {
     this._isMounted = true;
 
     this.setState({ loading: true }, () => {
+      const unsubscribe = this.subscribeToPosts();
+
+      this.setState({ unsubscribePosts: unsubscribe });
+
       fetchPosts().then((posts) => {
         if (this._isMounted) {
           this.setState({
@@ -35,16 +43,39 @@ class Posts extends Component {
     });
   };
 
+  subscribeToPosts = () => {
+    const unsubscribe = db
+      .collection("posts")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snap) => {
+        const posts = [];
+        snap.docs.map((doc) =>
+          posts.push({
+            id: doc.id,
+            title: doc.data().title,
+            description: doc.data().description,
+            createdAt: doc.data().createdAt,
+            user: doc.data().user,
+            authorName: doc.data().authorName,
+          })
+        );
+        if (this._isMounted) {
+          this.setState({ posts });
+        }
+      });
+    return unsubscribe;
+  };
+
   componentWillUnmount = () => {
     this._isMounted = false;
+
+    if (_.isFunction(this.state.unsubscribePosts)) {
+      this.state.unsubscribePosts();
+    }
   };
 
   removePost = (post) => {
     deletePost(post);
-
-    const posts = this.state.posts.filter((item) => post.id !== item.id);
-
-    this.setState({ posts });
   };
 
   showEditModal = (post) => {
@@ -62,26 +93,11 @@ class Posts extends Component {
   };
 
   editPost = () => {
-    const { postToEdit, changedTitle, changedDescription, posts } = this.state;
+    const { postToEdit, changedTitle, changedDescription } = this.state;
 
     updatePost(postToEdit, changedTitle, changedDescription);
 
-    const newPosts = posts.map((post) => {
-      if (postToEdit.id === post.id) {
-        return {
-          id: post.id,
-          title: changedTitle,
-          description: changedDescription,
-          createdAt: post.createdAt,
-          user: post.user,
-        };
-      } else {
-        return post;
-      }
-    });
-
     this.setState({
-      posts: newPosts,
       postToEdit: null,
       showEdit: false,
     });
@@ -143,7 +159,7 @@ class Posts extends Component {
               placeholder="Search Post by Title or Description..."
               className="search-posts"
               autoComplete="off"
-              value={this.state.search}
+              value={search}
               onChange={this.handleChange}
               name="search"
             />
@@ -200,7 +216,7 @@ class Posts extends Component {
                   type="text"
                   className="edit-post-input"
                   onChange={this.handleChange}
-                  value={this.state.changedTitle}
+                  value={changedTitle}
                   name="changedTitle"
                   placeholder="Title"
                   autoComplete="off"
@@ -213,7 +229,7 @@ class Posts extends Component {
                   type="text"
                   className="edit-post-input"
                   onChange={this.handleChange}
-                  value={this.state.changedDescription}
+                  value={changedDescription}
                   name="changedDescription"
                   placeholder="Description"
                   autoComplete="off"

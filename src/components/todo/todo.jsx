@@ -1,4 +1,3 @@
-import firebase from "../../config/firebase";
 import React, { Component } from "react";
 import TodoList from "./todo-list";
 import FilterButtons from "./filter-buttons";
@@ -12,6 +11,7 @@ import {
   removeAllCompleted,
   completeAllTodos,
 } from "../../functions/todo-functions";
+import firebase from "../../config/firebase";
 const _ = require("lodash");
 const db = firebase.firestore();
 

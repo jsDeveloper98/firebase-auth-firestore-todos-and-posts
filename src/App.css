@@ -66,7 +66,7 @@ body .posts .post-filters label {
   cursor: pointer;
   margin-bottom: -3px;
   position: absolute;
-  right: 65px;
+  right: 60px;
   top: 45px;
 }
 body .posts .post-filters .label-text {
@@ -369,6 +369,24 @@ body .modal-bg .edit-post-modal .modal-content .edit-post-input::placeholder {
 body .-disabled {
   opacity: 0.4;
   pointer-events: none;
+}
+body .chat-container .messages-main {
+  width: 55%;
+  height: calc(100vh - 96px);
+  background-color: #575757;
+  margin: 0 auto;
+  margin-top: 20px;
+  border-radius: 3px;
+  position: relative;
+}
+body .chat-container .messages-main .read-container {
+  height: 90%;
+  background-color: black;
+}
+body .chat-container .messages-main .write-container {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
 }
 ::-webkit-scrollbar {
   width: 10px;

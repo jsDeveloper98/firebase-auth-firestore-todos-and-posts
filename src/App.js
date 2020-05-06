@@ -10,11 +10,16 @@ import CreatePost from "./components/post/create-post";
 import Posts from "./components//post/posts";
 import PostDetails from "./components/post/post-details";
 import Todo from "./components/todo/todo";
+import Chat from "./components/realtime-chat/chat";
 
 class App extends Component {
-  state = {
-    user: {},
-  };
+  constructor(props) {
+    super(props);
+    this.wrapper = React.createRef();
+    this.state = {
+      user: {},
+    };
+  }
 
   componentDidMount = () => {
     this.authListener();
@@ -38,7 +43,7 @@ class App extends Component {
     const { user } = this.state;
 
     return (
-      <Router>
+      <Router ref={this.wrapper}>
         <div className="main-nav-bar">
           <NavBar user={user} logOut={this.logOut} />
         </div>
@@ -52,6 +57,7 @@ class App extends Component {
         <Route path="/posts" component={() => <Posts user={user} />} />
         <Route path="/post/:id" component={PostDetails} />
         <Route path="/todo" component={() => <Todo user={user} />} />
+        <Route path="/chat" component={() => <Chat user={user} />} />
       </Router>
     );
   }
