@@ -286,7 +286,7 @@ body .todo-container .filter-buttons .filter-btn.-active {
 }
 body .todo-container .filter-buttons .remove-completed {
   margin-left: 40px;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
 }
 body .post-item-details {
@@ -391,7 +391,6 @@ body .-disabled {
 }
 @media only screen and (max-width: 770px) {
   .post-filters {
-    display: flex !important;
     justify-content: start !important;
     align-items: flex-start !important;
   }
@@ -435,13 +434,7 @@ body .-disabled {
   .todo-container .filter-buttons .remove-completed {
     margin-left: 15px !important;
   }
-  .todo-container .post-filters {
-    position: relative;
-    flex-direction: column !important;
-  }
-  .todo-container .post-filters label {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+  .posts .post-filters {
+    position: static !important;
   }
 }

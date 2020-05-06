@@ -3,13 +3,13 @@ import React from "react";
 const FilterButtons = ({
   completedTodos,
   filterParam,
-  filteredTodos,
+  activeTodos,
   removeCompletedTodos,
   setFilter,
 }) => {
   return (
     <React.Fragment>
-      <div className="todos-count">{filteredTodos.length} items</div>
+      <div className="todos-count">{activeTodos.length} items left</div>
       <div className={activeAll(filterParam)} onClick={() => setFilter("all")}>
         All
       </div>

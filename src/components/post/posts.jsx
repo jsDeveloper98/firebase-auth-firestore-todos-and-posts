@@ -204,6 +204,7 @@ class Posts extends Component {
                   name="changedTitle"
                   placeholder="Title"
                   autoComplete="off"
+                  autoFocus="on"
                 />
               </Modal.Header>
 
