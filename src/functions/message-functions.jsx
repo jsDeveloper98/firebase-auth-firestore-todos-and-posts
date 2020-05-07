@@ -6,13 +6,13 @@ const createMessage = (value, user) => {
     .collection("users")
     .where("uid", "==", user.uid)
     .get()
-    .then((res) => res.docs.map((doc) => doc.data().username[0]))
+    .then((res) => res.docs.map((doc) => doc.data().username))
     .then((username) => {
       return db.collection("messages").add({
         title: value,
         createdAt: new Date(),
         user: user.uid,
-        authorName: username,
+        authorName: username[0],
       });
     });
 };

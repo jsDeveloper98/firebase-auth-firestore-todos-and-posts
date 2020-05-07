@@ -58,8 +58,8 @@ class Messages extends Component {
   componentWillUnmount = () => {
     this._isMounted = false;
 
-    if (_.isFunction(this.unsubscribeToMessages)) {
-      this.unsubscribeToMessages();
+    if (_.isFunction(this.state.unsubscribeToMessages)) {
+      this.state.unsubscribeToMessages();
     }
   };
 
@@ -75,6 +75,11 @@ class Messages extends Component {
     if (e.key === "Enter" && value) {
       createMessage(value, this.props.user);
 
+      setTimeout(() => {
+        const container = document.getElementById("container");
+        container.scrollTop = container.scrollHeight;
+      }, 400);
+
       this.setState({
         value: "",
       });
@@ -84,10 +89,14 @@ class Messages extends Component {
   render() {
     return (
       <div className="messages-main">
-        <div className="read-container">
+        <div className="read-container" id="container">
           {this.state.messages.map((message, i) => (
             <div className="message" key={i}>
-              <Message key={message.id} message={message} />
+              <Message
+                key={message.id}
+                message={message}
+                user={this.props.user}
+              />
             </div>
           ))}
         </div>
