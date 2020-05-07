@@ -12,7 +12,7 @@ class Chat extends Component {
     return (
       <div className="chat-container">
         <div className="container">
-          <Messages />
+          <Messages user={this.props.user} />
         </div>
       </div>
     );

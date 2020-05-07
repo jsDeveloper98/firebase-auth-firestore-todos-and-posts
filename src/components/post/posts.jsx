@@ -19,7 +19,7 @@ class Posts extends Component {
     filterPosts: false,
     showEdit: false,
     postToEdit: null,
-    unsubscribePosts: null,
+    unsubscribeToPosts: null,
     changedTitle: "",
     changedDescription: "",
   };
@@ -28,9 +28,9 @@ class Posts extends Component {
     this._isMounted = true;
 
     this.setState({ loading: true }, () => {
-      const unsubscribe = this.subscribeToPosts();
+      const unsubscribeToPosts = this.subscribeToPosts();
 
-      this.setState({ unsubscribePosts: unsubscribe });
+      this.setState({ unsubscribeToPosts });
 
       fetchPosts().then((posts) => {
         if (this._isMounted) {
@@ -49,16 +49,24 @@ class Posts extends Component {
       .orderBy("createdAt", "desc")
       .onSnapshot((snap) => {
         const posts = [];
-        snap.docs.map((doc) =>
-          posts.push({
+        snap.docs.map((doc) => {
+          const {
+            title,
+            description,
+            createdAt,
+            user,
+            authorName,
+          } = doc.data();
+
+          return posts.push({
             id: doc.id,
-            title: doc.data().title,
-            description: doc.data().description,
-            createdAt: doc.data().createdAt,
-            user: doc.data().user,
-            authorName: doc.data().authorName,
-          })
-        );
+            title,
+            description,
+            createdAt,
+            user,
+            authorName,
+          });
+        });
         if (this._isMounted) {
           this.setState({ posts });
         }
@@ -69,8 +77,8 @@ class Posts extends Component {
   componentWillUnmount = () => {
     this._isMounted = false;
 
-    if (_.isFunction(this.state.unsubscribePosts)) {
-      this.state.unsubscribePosts();
+    if (_.isFunction(this.state.unsubscribeToPosts)) {
+      this.state.unsubscribeToPosts();
     }
   };
 

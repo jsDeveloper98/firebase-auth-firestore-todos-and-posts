@@ -21,7 +21,7 @@ class Todo extends Component {
     todos: [],
     title: "",
     filterParam: "all",
-    unsubscribeTodos: null,
+    unsubscribeToTodos: null,
   };
 
   componentDidMount = () => {
@@ -30,9 +30,9 @@ class Todo extends Component {
 
     this.setState({ loading: true }, () => {
       if (!_.isEmpty(user)) {
-        const unsubscribe = this.subscribeToTodos(user);
+        const unsubscribeToTodos = this.subscribeToTodos(user);
 
-        this.setState({ unsubscribeTodos: unsubscribe });
+        this.setState({ unsubscribeToTodos });
 
         fetchTodos(user).then((todos) => {
           if (this._isMounted) {
@@ -53,15 +53,17 @@ class Todo extends Component {
       .orderBy("createdAt", "desc")
       .onSnapshot((snap) => {
         const todos = [];
-        snap.docs.map((doc) =>
-          todos.push({
+        snap.docs.map((doc) => {
+          const { title, done, createdAt, user } = doc.data();
+
+          return todos.push({
             id: doc.id,
-            title: doc.data().title,
-            done: doc.data().done,
-            createdAt: doc.data().createdAt,
-            user: doc.data().user,
-          })
-        );
+            title,
+            done,
+            createdAt,
+            user,
+          });
+        });
 
         this.setState({ todos });
       });
@@ -89,8 +91,8 @@ class Todo extends Component {
   componentWillUnmount = () => {
     this._isMounted = false;
 
-    if (_.isFunction(this.state.unsubscribeTodos)) {
-      this.state.unsubscribeTodos();
+    if (_.isFunction(this.state.unsubscribeToTodos)) {
+      this.state.unsubscribeToTodos();
     }
   };
 
@@ -103,13 +105,7 @@ class Todo extends Component {
   };
 
   removeCompletedTodos = () => {
-    const { todos } = this.state;
-
-    const completedTodos = todos.filter((todo) => todo.done);
-
-    completedTodos.forEach((todo) => {
-      removeAllCompleted(todo);
-    });
+    removeAllCompleted();
   };
 
   toggleDone = (todo) => {
@@ -117,13 +113,7 @@ class Todo extends Component {
   };
 
   doneAllTodos = () => {
-    const { todos } = this.state;
-
-    const activeTodos = todos.filter((todo) => !todo.done);
-
-    activeTodos.forEach((todo) => {
-      completeAllTodos(todo);
-    });
+    completeAllTodos();
   };
 
   render() {

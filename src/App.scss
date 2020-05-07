@@ -462,14 +462,34 @@ body {
       position: relative;
 
       .read-container {
-        height: 90%;
-        background-color: black;
+        height: calc(93vh - 96px);
       }
 
       .write-container {
         width: 100%;
-        height: 100%;
-        background-color: $white;
+        height: calc(7vh);
+        min-height: 55px;
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top: 1px solid $border;
+
+        input {
+          width: 80%;
+          height: 35px;
+          border-radius: 5px;
+          border: none;
+          padding: 0 20px;
+          background-color: $text;
+          outline: none;
+          color: $white;
+
+          &::placeholder {
+            color: $secondTextColor;
+          }
+        }
       }
     }
   }

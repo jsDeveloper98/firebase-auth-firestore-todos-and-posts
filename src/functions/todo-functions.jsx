@@ -18,12 +18,14 @@ const fetchTodos = (user) => {
     .get()
     .then((res) =>
       res.docs.map((doc) => {
+        const { title, done, createdAt, user } = doc.data();
+
         return {
           id: doc.id,
-          title: doc.data().title,
-          done: doc.data().done,
-          createdAt: doc.data().createdAt,
-          user: doc.data().user,
+          title,
+          done,
+          createdAt,
+          user,
         };
       })
     );
@@ -42,17 +44,35 @@ const toggleCheck = (todo) => {
   );
 };
 
-const removeAllCompleted = (todo) => {
-  return db.collection("todos").doc(todo.id).delete();
+const removeAllCompleted = () => {
+  return db
+    .collection("todos")
+    .where("done", "==", true)
+    .get()
+    .then((res) => res.docs.map((doc) => doc.id))
+    .then((doneTodoIds) =>
+      doneTodoIds.map((doneTodoId) => {
+        return db.collection("todos").doc(doneTodoId).delete();
+      })
+    );
 };
 
-const completeAllTodos = (todo) => {
-  return db.collection("todos").doc(todo.id).set(
-    {
-      done: true,
-    },
-    { merge: true }
-  );
+const completeAllTodos = () => {
+  return db
+    .collection("todos")
+    .where("done", "==", false)
+    .get()
+    .then((res) => res.docs.map((doc) => doc.id))
+    .then((activeTodoIds) =>
+      activeTodoIds.map((activeTodoId) => {
+        return db.collection("todos").doc(activeTodoId).set(
+          {
+            done: true,
+          },
+          { merge: true }
+        );
+      })
+    );
 };
 
 export {

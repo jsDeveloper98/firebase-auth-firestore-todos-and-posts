@@ -6,14 +6,14 @@ const createPost = (title, description, user) => {
     .collection("users")
     .where("uid", "==", user.uid)
     .get()
-    .then((res) => res.docs.map((doc) => doc.data().username))
+    .then((res) => res.docs.map((doc) => doc.data().username[0]))
     .then((username) => {
       return db.collection("posts").add({
         title,
         description,
         createdAt: new Date(),
         user: user.uid,
-        authorName: username[0],
+        authorName: username,
       });
     });
 };
@@ -25,13 +25,15 @@ const fetchPosts = () => {
     .get()
     .then((res) =>
       res.docs.map((doc) => {
+        const { title, description, createdAt, user, authorName } = doc.data();
+
         return {
           id: doc.id,
-          title: doc.data().title,
-          description: doc.data().description,
-          createdAt: doc.data().createdAt,
-          user: doc.data().user,
-          authorName: doc.data().authorName,
+          title,
+          description,
+          createdAt,
+          user,
+          authorName,
         };
       })
     );
