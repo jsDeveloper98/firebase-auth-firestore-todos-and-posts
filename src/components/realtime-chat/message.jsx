@@ -1,6 +1,6 @@
 import React from "react";
 
-const Message = ({ message, user }) => {
+const Message = ({ message, user, onRemove }) => {
   return (
     <div className={detectCurrentUsersMessages(user, message)}>
       <div className="message-author-name">{message.authorName}</div>
@@ -8,6 +8,10 @@ const Message = ({ message, user }) => {
       <div className="alert alert-dark message-title" role="alert">
         <div className={detectCurrentUsersArrow(user, message)}></div>
         {message.title}
+      </div>
+
+      <div className="remove-message" onClick={() => onRemove(message)}>
+        ✗
       </div>
     </div>
   );

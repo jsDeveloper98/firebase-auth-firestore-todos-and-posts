@@ -8,7 +8,6 @@ const createPost = (title, description, user) => {
     .get()
     .then((res) => res.docs.map((doc) => doc.data().username))
     .then((username) => {
-      console.log(username);
       return db.collection("posts").add({
         title,
         description,

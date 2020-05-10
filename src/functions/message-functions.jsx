@@ -37,4 +37,47 @@ const fetchMessages = () => {
     );
 };
 
-export { createMessage, fetchMessages };
+const deleteMessage = (message) => {
+  return db.collection("messages").doc(message.id).delete();
+};
+
+const addDeletedMessageForCurrentUser = (user, message) => {
+  return db
+    .collection("users")
+    .where("uid", "==", user.uid)
+    .get()
+    .then((res) => res.docs.map((doc) => doc.id))
+    .then((userId) => {
+      return db
+        .collection("users")
+        .doc(userId[0])
+        .update({
+          removedMessageIds: firebase.firestore.FieldValue.arrayUnion(
+            message.id
+          ),
+        });
+    });
+};
+
+const fetchDeletedMessagesForCurrentUser = (user) => {
+  return db
+    .collection("users")
+    .where("uid", "==", user.uid)
+    .get()
+    .then((res) =>
+      res.docs.forEach((doc) => {
+        const { removedMessageIds } = doc.data();
+        if (removedMessageIds) {
+          return removedMessageIds;
+        }
+      })
+    );
+};
+
+export {
+  createMessage,
+  fetchMessages,
+  deleteMessage,
+  addDeletedMessageForCurrentUser,
+  fetchDeletedMessagesForCurrentUser,
+};

@@ -20,6 +20,11 @@ body {
     width: 380px;
     margin: 200px auto;
 
+    button {
+      background-color: $input !important;
+      border: none !important;
+    }
+
     .label-settings {
       color: $text;
     }
@@ -192,7 +197,6 @@ body {
           .edit-post {
             width: 22px;
             margin-right: 7px;
-            margin-bottom: 2.5px;
             display: none;
             cursor: pointer;
           }
@@ -384,6 +388,10 @@ body {
     max-height: 278px;
     position: relative;
 
+    button {
+      background-color: $text !important;
+    }
+
     .post-title {
       max-height: 50px;
       overflow: hidden;
@@ -412,6 +420,10 @@ body {
     bottom: 0;
     left: 0;
     background: rgba(34, 34, 38, 0.8);
+
+    .close-edit-post-modal-btn {
+      background-color: $text !important;
+    }
 
     .edit-post-modal {
       top: calc(50vh - 155px);
@@ -453,7 +465,7 @@ body {
 
   .chat-container {
     .messages-main {
-      width: 50%;
+      width: 600px;
       min-height: calc(100vh - 96px);
       background-color: $input;
       margin: 0 auto;
@@ -483,12 +495,31 @@ body {
         .message-wrapper {
           margin-bottom: 15px;
           margin-left: 8px;
+          position: relative;
+
+          .remove-message {
+            position: absolute;
+            top: -3px;
+            right: 0;
+            font-size: 21px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            color: $red;
+          }
+
+          &:hover {
+            .remove-message {
+              display: block !important;
+            }
+          }
 
           &.-current-users-message {
             display: flex;
             text-align: end;
             flex-direction: column;
             align-items: flex-end;
+            padding-right: 30px;
           }
 
           .message-author-name {
@@ -504,12 +535,11 @@ body {
             background-color: $text;
             border-color: $border;
             width: 45%;
-            margin: 15px 5px 0 5px;
+            margin: 15px 0px 0 0px;
             min-height: 70px;
             border-radius: 30px;
             text-align: start;
             position: relative;
-            z-index: 1000;
             overflow-wrap: break-word;
 
             .message-arrow {
@@ -561,6 +591,39 @@ body {
       }
     }
   }
+
+  .delete-message-conf-background {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(34, 34, 38, 0.8);
+
+    .delete-message-confirmation {
+      position: absolute;
+      top: calc(50vh - 136px);
+      left: calc(50% - 153px);
+
+      .modal-content {
+        background-color: $input;
+        border: none;
+
+        .modal-header {
+          border-color: $input;
+          color: $white;
+        }
+
+        .modal-footer {
+          border: none;
+
+          button {
+            background-color: $text !important;
+          }
+        }
+      }
+    }
+  }
 }
 
 ::-webkit-scrollbar {
@@ -594,6 +657,10 @@ body {
     .search-posts {
       margin: 40px 0 20px 0 !important;
     }
+  }
+
+  .messages-main {
+    width: 100% !important;
   }
 }
 

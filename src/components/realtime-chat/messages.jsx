@@ -2,9 +2,13 @@ import React, { Component } from "react";
 import {
   createMessage,
   fetchMessages,
+  deleteMessage,
+  addDeletedMessageForCurrentUser,
+  fetchDeletedMessagesForCurrentUser,
 } from "../../functions/message-functions";
 import firebase from "../../config/firebase";
 import Message from "./message";
+import { Modal, Button } from "react-bootstrap";
 const _ = require("lodash");
 const db = firebase.firestore();
 
@@ -13,11 +17,15 @@ class Messages extends Component {
   state = {
     value: "",
     messages: [],
+    removedMessageIds: [],
     unsubscribeToMessages: null,
+    showRemoveModal: false,
+    messageToRemove: null,
   };
 
   componentDidMount = () => {
     this._isMounted = true;
+    const { user } = this.props;
 
     const unsubscribeToMessages = this.subscribeToMessages();
 
@@ -28,6 +36,17 @@ class Messages extends Component {
         this.setState({ messages });
       }
     });
+
+    if (!_.isEmpty(user)) {
+      this.subscribeToRemovedMessages(user);
+
+      fetchDeletedMessagesForCurrentUser(user).then((removedMessageIds) => {
+        if (this._isMounted) {
+          const newMessages = _.flatten(removedMessageIds);
+          this.setState({ removedMessageIds: newMessages });
+        }
+      });
+    }
   };
 
   subscribeToMessages = () => {
@@ -55,6 +74,19 @@ class Messages extends Component {
     return unsubscribe;
   };
 
+  subscribeToRemovedMessages = (user) => {
+    const unsubscribe = db
+      .collection("users")
+      .where("uid", "==", user.uid)
+      .onSnapshot((snap) => {
+        snap.docs.forEach((doc) => {
+          const { removedMessageIds } = doc.data();
+          this.setState({ removedMessageIds });
+        });
+      });
+    return unsubscribe;
+  };
+
   componentWillUnmount = () => {
     this._isMounted = false;
 
@@ -78,7 +110,7 @@ class Messages extends Component {
       setTimeout(() => {
         const container = document.getElementById("container");
         container.scrollTop = container.scrollHeight;
-      }, 400);
+      }, 500);
 
       this.setState({
         value: "",
@@ -86,16 +118,60 @@ class Messages extends Component {
     }
   };
 
+  removeMessage = () => {
+    deleteMessage(this.state.messageToRemove);
+    this.setState({
+      showRemoveModal: false,
+      messageToRemove: null,
+    });
+  };
+
+  showRemoveMessageModal = (message) => {
+    this.setState({
+      showRemoveModal: true,
+      messageToRemove: message,
+    });
+  };
+
+  hideRemoveMessageModal = () => {
+    this.setState({
+      showRemoveModal: false,
+      messageToRemove: null,
+    });
+  };
+
+  removeMessageForCurrentUser = () => {
+    addDeletedMessageForCurrentUser(
+      this.props.user,
+      this.state.messageToRemove
+    );
+    this.setState({
+      showRemoveModal: false,
+      messageToRemove: null,
+    });
+  };
+
   render() {
+    const { messages, removedMessageIds } = this.state;
+
+    const filteredMessages = messages.filter((message) => {
+      if (removedMessageIds) {
+        return !removedMessageIds.includes(message.id);
+      } else {
+        return messages;
+      }
+    });
+
     return (
       <div className="messages-main">
         <div className="read-container" id="container">
-          {this.state.messages.map((message, i) => (
+          {filteredMessages.map((message, i) => (
             <div className="message" key={i}>
               <Message
                 key={message.id}
                 message={message}
                 user={this.props.user}
+                onRemove={this.showRemoveMessageModal}
               />
             </div>
           ))}
@@ -110,6 +186,28 @@ class Messages extends Component {
             onKeyDown={this.handleKeyDown}
           />
         </div>
+
+        {this.state.showRemoveModal ? (
+          <div className="delete-message-conf-background">
+            <Modal.Dialog className="delete-message-confirmation">
+              <Modal.Header closeButton onClick={this.hideRemoveMessageModal}>
+                <Modal.Title>Delete this Message?</Modal.Title>
+              </Modal.Header>
+
+              <Modal.Footer>
+                <Button
+                  onClick={this.removeMessageForCurrentUser}
+                  variant="secondary"
+                >
+                  Only for me
+                </Button>
+                <Button onClick={this.removeMessage} variant="secondary">
+                  Delete for Everyone
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </div>
+        ) : null}
       </div>
     );
   }

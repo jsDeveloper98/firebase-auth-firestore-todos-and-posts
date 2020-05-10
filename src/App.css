@@ -10,6 +10,10 @@ body .form-settings {
   width: 380px;
   margin: 200px auto;
 }
+body .form-settings button {
+  background-color: #575757 !important;
+  border: none !important;
+}
 body .form-settings .label-settings {
   color: #777;
 }
@@ -156,7 +160,6 @@ body .posts .posts-list .post-item .post-settings .remove-post {
 body .posts .posts-list .post-item .post-settings .edit-post {
   width: 22px;
   margin-right: 7px;
-  margin-bottom: 2.5px;
   display: none;
   cursor: pointer;
 }
@@ -314,6 +317,9 @@ body .post-item-jumbotron {
   max-height: 278px;
   position: relative;
 }
+body .post-item-jumbotron button {
+  background-color: #777 !important;
+}
 body .post-item-jumbotron .post-title {
   max-height: 50px;
   overflow: hidden;
@@ -338,6 +344,9 @@ body .modal-bg {
   bottom: 0;
   left: 0;
   background: rgba(34, 34, 38, 0.8);
+}
+body .modal-bg .close-edit-post-modal-btn {
+  background-color: #777 !important;
 }
 body .modal-bg .edit-post-modal {
   top: calc(50vh - 155px);
@@ -371,7 +380,7 @@ body .-disabled {
   pointer-events: none;
 }
 body .chat-container .messages-main {
-  width: 50%;
+  width: 600px;
   min-height: calc(100vh - 96px);
   background-color: #575757;
   margin: 0 auto;
@@ -397,6 +406,42 @@ body .chat-container .messages-main .read-container::-webkit-scrollbar-thumb {
 }
 body .chat-container .messages-main .read-container .message-wrapper {
   margin-bottom: 15px;
+  margin-left: 8px;
+  position: relative;
+}
+body
+  .chat-container
+  .messages-main
+  .read-container
+  .message-wrapper
+  .remove-message {
+  position: absolute;
+  top: -3px;
+  right: 0;
+  font-size: 21px;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+  color: #970000;
+}
+body
+  .chat-container
+  .messages-main
+  .read-container
+  .message-wrapper:hover
+  .remove-message {
+  display: block !important;
+}
+body
+  .chat-container
+  .messages-main
+  .read-container
+  .message-wrapper.-current-users-message {
+  display: flex;
+  text-align: end;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: 30px;
 }
 body
   .chat-container
@@ -407,6 +452,7 @@ body
   font-weight: bold;
   font-size: 18px;
   color: #a1a1a1;
+  width: 45%;
 }
 body
   .chat-container
@@ -419,13 +465,12 @@ body
   background-color: #777;
   border-color: #444446;
   width: 45%;
+  margin: 15px 0px 0 0px;
   min-height: 70px;
   border-radius: 30px;
   text-align: start;
-  margin: 15px 10px 0 auto;
   position: relative;
-  z-index: 1000;
-  overflow: hidden;
+  overflow-wrap: break-word;
 }
 body
   .chat-container
@@ -438,7 +483,7 @@ body
   height: 20px;
   position: absolute;
   top: -10px;
-  right: 25px;
+  right: calc(100% - 48px);
   background-color: #777;
   transform: rotate(45deg);
   border-top: 1px solid #444446;
@@ -448,8 +493,10 @@ body
   .chat-container
   .messages-main
   .read-container
-  .message-wrapper.-current-users-message {
-  text-align: end;
+  .message-wrapper
+  .message-title
+  .message-arrow.-current-users-arrow {
+  left: calc(100% - 48px);
 }
 body .chat-container .messages-main .write-container {
   width: 100%;
@@ -475,6 +522,49 @@ body .chat-container .messages-main .write-container input {
 }
 body .chat-container .messages-main .write-container input::placeholder {
   color: #a1a1a1;
+}
+body .delete-message-conf-background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(34, 34, 38, 0.8);
+}
+body .delete-message-conf-background .delete-message-confirmation {
+  position: absolute;
+  top: calc(50vh - 136px);
+  left: calc(50% - 153px);
+}
+body
+  .delete-message-conf-background
+  .delete-message-confirmation
+  .modal-content {
+  background-color: #575757;
+  border: none;
+}
+body
+  .delete-message-conf-background
+  .delete-message-confirmation
+  .modal-content
+  .modal-header {
+  border-color: #575757;
+  color: #fff;
+}
+body
+  .delete-message-conf-background
+  .delete-message-confirmation
+  .modal-content
+  .modal-footer {
+  border: none;
+}
+body
+  .delete-message-conf-background
+  .delete-message-confirmation
+  .modal-content
+  .modal-footer
+  button {
+  background-color: #777 !important;
 }
 ::-webkit-scrollbar {
   width: 10px;
@@ -502,6 +592,9 @@ body .chat-container .messages-main .write-container input::placeholder {
   }
   .post-filters .search-posts {
     margin: 40px 0 20px 0 !important;
+  }
+  .messages-main {
+    width: 100% !important;
   }
 }
 @media only screen and (max-width: 700px) {

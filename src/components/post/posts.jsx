@@ -245,7 +245,11 @@ class Posts extends Component {
               </Modal.Body>
 
               <Modal.Footer>
-                <Button variant="secondary" onClick={this.hideEditModal}>
+                <Button
+                  className="close-edit-post-modal-btn"
+                  variant="secondary"
+                  onClick={this.hideEditModal}
+                >
                   Close
                 </Button>
                 <Button
