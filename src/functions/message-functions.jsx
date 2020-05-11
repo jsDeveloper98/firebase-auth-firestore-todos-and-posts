@@ -65,10 +65,12 @@ const fetchDeletedMessagesForCurrentUser = (user) => {
     .where("uid", "==", user.uid)
     .get()
     .then((res) =>
-      res.docs.forEach((doc) => {
+      res.docs.map((doc) => {
         const { removedMessageIds } = doc.data();
         if (removedMessageIds) {
           return removedMessageIds;
+        } else {
+          return null;
         }
       })
     );

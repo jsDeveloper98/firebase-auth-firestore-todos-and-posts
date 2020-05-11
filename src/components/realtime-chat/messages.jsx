@@ -152,7 +152,15 @@ class Messages extends Component {
   };
 
   render() {
-    const { messages, removedMessageIds } = this.state;
+    const {
+      messages,
+      removedMessageIds,
+      showRemoveModal,
+      value,
+      messageToRemove,
+    } = this.state;
+
+    const { user } = this.props;
 
     const filteredMessages = messages.filter((message) => {
       if (removedMessageIds) {
@@ -170,7 +178,7 @@ class Messages extends Component {
               <Message
                 key={message.id}
                 message={message}
-                user={this.props.user}
+                user={user}
                 onRemove={this.showRemoveMessageModal}
               />
             </div>
@@ -180,14 +188,14 @@ class Messages extends Component {
           <input
             type="text"
             placeholder="Write a message..."
-            value={this.state.value}
+            value={value}
             onChange={this.handleChange}
             name="value"
             onKeyDown={this.handleKeyDown}
           />
         </div>
 
-        {this.state.showRemoveModal ? (
+        {showRemoveModal ? (
           <div className="delete-message-conf-background">
             <Modal.Dialog className="delete-message-confirmation">
               <Modal.Header closeButton onClick={this.hideRemoveMessageModal}>
@@ -201,9 +209,11 @@ class Messages extends Component {
                 >
                   Only for me
                 </Button>
-                <Button onClick={this.removeMessage} variant="secondary">
-                  Delete for Everyone
-                </Button>
+                {messageToRemove.user === user.uid ? (
+                  <Button onClick={this.removeMessage} variant="secondary">
+                    Delete for Everyone
+                  </Button>
+                ) : null}
               </Modal.Footer>
             </Modal.Dialog>
           </div>
