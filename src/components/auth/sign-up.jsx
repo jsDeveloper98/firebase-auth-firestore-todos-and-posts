@@ -3,6 +3,7 @@ import firebase from "../../config/firebase";
 import { Form, Button } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import { createUser } from "../../functions/user-functions";
+import { setOnline } from "../../functions/user-functions";
 
 class SignIn extends Component {
   state = {

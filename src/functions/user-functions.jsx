@@ -6,7 +6,62 @@ const createUser = (user, username) => {
     uid: user.user.uid,
     username,
     email: user.user.email,
+    isOnline: false,
   });
 };
 
-export { createUser };
+const fetchUsers = () => {
+  return db
+    .collection("users")
+    .get()
+    .then((res) =>
+      res.docs.map((doc) => {
+        const { email, username, uid, isOnline } = doc.data();
+        console.log("aloooo");
+
+        return {
+          id: doc.id,
+          email,
+          username,
+          uid,
+          isOnline,
+        };
+      })
+    );
+};
+
+const setOnline = ({ user }) => {
+  return db
+    .collection("users")
+    .where("uid", "==", user.uid)
+    .get()
+    .then((res) =>
+      res.docs.map((doc) => {
+        return db.collection("users").doc(doc.id).set(
+          {
+            isOnline: true,
+          },
+          { merge: true }
+        );
+      })
+    );
+};
+
+const setOffline = (user) => {
+  return db
+    .collection("users")
+    .where("uid", "==", user.uid)
+    .get()
+    .then((res) =>
+      res.docs.map((doc) => {
+        return db.collection("users").doc(doc.id).set(
+          {
+            isOnline: false,
+          },
+          { merge: true }
+        );
+      })
+    );
+};
+
+export { createUser, fetchUsers, setOnline, setOffline };

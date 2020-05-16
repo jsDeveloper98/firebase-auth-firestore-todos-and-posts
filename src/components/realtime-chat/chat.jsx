@@ -1,6 +1,7 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import Messages from "./messages";
+import Users from "./users";
 
 const Chat = ({ user }) => {
   if (!user) {
@@ -11,6 +12,9 @@ const Chat = ({ user }) => {
     <div className="chat-container">
       <div className="container">
         <Messages user={user} />
+      </div>
+      <div className="users-container">
+        <Users user={user} />
       </div>
     </div>
   );

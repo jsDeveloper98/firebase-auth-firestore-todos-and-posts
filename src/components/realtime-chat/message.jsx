@@ -15,12 +15,14 @@ const Message = ({ message, user, onRemove, onEdit }) => {
         <div className="remove-message" onClick={() => onRemove(message)}>
           ✗
         </div>
-        <img
-          className="edit-message"
-          src={editIcon}
-          alt="edit"
-          onClick={() => onEdit(message)}
-        />
+        {user.uid === message.user ? (
+          <img
+            className="edit-message"
+            src={editIcon}
+            alt="edit"
+            onClick={() => onEdit(message)}
+          />
+        ) : null}
       </div>
     </div>
   );

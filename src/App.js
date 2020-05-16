@@ -11,11 +11,14 @@ import Posts from "./components//post/posts";
 import PostDetails from "./components/post/post-details";
 import Todo from "./components/todo/todo";
 import Chat from "./components/realtime-chat/chat";
+import { setOffline, setOnline } from "./functions/user-functions";
+const _ = require("lodash");
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.wrapper = React.createRef();
+
     this.state = {
       user: {},
     };
@@ -29,7 +32,13 @@ class App extends Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user });
+        setOnline({ user });
       } else {
+        const { user } = this.state;
+
+        if (user && !_.isEmpty(user)) {
+          setOffline(user);
+        }
         this.setState({ user: null });
       }
     });

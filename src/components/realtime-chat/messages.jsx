@@ -35,7 +35,9 @@ class Messages extends Component {
 
     const unsubscribeToMessages = this.subscribeToMessages();
 
-    this.setState({ unsubscribeToMessages });
+    if (this._isMounted) {
+      this.setState({ unsubscribeToMessages });
+    }
 
     fetchMessages().then((messages) => {
       if (this._isMounted) {
@@ -87,7 +89,10 @@ class Messages extends Component {
       .onSnapshot((snap) => {
         snap.docs.forEach((doc) => {
           const { removedMessageIds } = doc.data();
-          this.setState({ removedMessageIds });
+
+          if (this._isMounted) {
+            this.setState({ removedMessageIds });
+          }
         });
       });
     return unsubscribe;

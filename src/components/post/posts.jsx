@@ -31,7 +31,9 @@ class Posts extends Component {
     this.setState({ loading: true }, () => {
       const unsubscribeToPosts = this.subscribeToPosts();
 
-      this.setState({ unsubscribeToPosts });
+      if (this._isMounted) {
+        this.setState({ unsubscribeToPosts });
+      }
 
       fetchPosts().then((posts) => {
         if (this._isMounted) {

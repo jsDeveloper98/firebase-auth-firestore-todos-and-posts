@@ -151,14 +151,14 @@ body .posts .posts-list .post-item .post-settings {
   align-items: center;
 }
 body .posts .posts-list .post-item .post-settings .remove-post {
-  font-size: 25px;
+  font-size: 23px;
   font-weight: bold;
   cursor: pointer;
   color: #970000;
   display: none;
 }
 body .posts .posts-list .post-item .post-settings .edit-post {
-  width: 22px;
+  width: 23px;
   margin-right: 7px;
   display: none;
   cursor: pointer;
@@ -379,6 +379,9 @@ body .-disabled {
   opacity: 0.4;
   pointer-events: none;
 }
+body .chat-container {
+  position: relative;
+}
 body .chat-container .messages-main {
   width: 600px;
   min-height: calc(100vh - 96px);
@@ -415,7 +418,7 @@ body
   .read-container
   .message-wrapper
   .edit-message {
-  width: 22px;
+  width: 21px;
   position: absolute;
   top: 30px;
   right: 0;
@@ -543,6 +546,35 @@ body .chat-container .messages-main .write-container input {
 }
 body .chat-container .messages-main .write-container input::placeholder {
   color: #a1a1a1;
+}
+body .chat-container .users-container {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  background-color: #575757;
+}
+body .chat-container .users-container .users-list .user {
+  width: 100%;
+  height: 45px;
+  border-bottom: 1px solid #444446;
+  font-size: 18px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 15px;
+  color: #fff;
+}
+body .chat-container .users-container .users-list .user .status {
+  width: 11px;
+  height: 11px;
+  background-color: #444446;
+  border-radius: 100%;
+  margin-left: auto;
+}
+body .chat-container .users-container .users-list .user .status.-online {
+  background-color: #00af00 !important;
 }
 body .delete-message-conf-background {
   position: fixed;
