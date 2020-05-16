@@ -5,6 +5,8 @@ import {
   deleteMessage,
   addDeletedMessageForCurrentUser,
   fetchDeletedMessagesForCurrentUser,
+  removeDeletedMessages,
+  updateMessage,
 } from "../../functions/message-functions";
 import firebase from "../../config/firebase";
 import Message from "./message";
@@ -14,13 +16,17 @@ const db = firebase.firestore();
 
 class Messages extends Component {
   _isMounted = false;
+
   state = {
     value: "",
+    changedTitle: "",
     messages: [],
     removedMessageIds: [],
     unsubscribeToMessages: null,
     showRemoveModal: false,
+    showEditModal: false,
     messageToRemove: null,
+    messageToEdit: null,
   };
 
   componentDidMount = () => {
@@ -89,9 +95,10 @@ class Messages extends Component {
 
   componentWillUnmount = () => {
     this._isMounted = false;
+    const { unsubscribeToMessages } = this.state;
 
-    if (_.isFunction(this.state.unsubscribeToMessages)) {
-      this.state.unsubscribeToMessages();
+    if (_.isFunction(unsubscribeToMessages)) {
+      unsubscribeToMessages();
     }
   };
 
@@ -119,7 +126,11 @@ class Messages extends Component {
   };
 
   removeMessage = () => {
-    deleteMessage(this.state.messageToRemove);
+    const { messageToRemove } = this.state;
+
+    deleteMessage(messageToRemove);
+    removeDeletedMessages(messageToRemove);
+
     this.setState({
       showRemoveModal: false,
       messageToRemove: null,
@@ -151,13 +162,40 @@ class Messages extends Component {
     });
   };
 
+  showEditMessageModal = (message) => {
+    this.setState({
+      showEditModal: true,
+      messageToEdit: message,
+    });
+  };
+
+  hideEditMessageModel = () => {
+    this.setState({
+      showEditModal: false,
+      messageToEdit: null,
+    });
+  };
+
+  editMessage = () => {
+    const { messageToEdit, changedTitle } = this.state;
+
+    updateMessage(messageToEdit, changedTitle);
+
+    this.setState({
+      showEditModal: false,
+      messageToEdit: null,
+    });
+  };
+
   render() {
     const {
       messages,
       removedMessageIds,
       showRemoveModal,
+      showEditModal,
       value,
       messageToRemove,
+      changedTitle,
     } = this.state;
 
     const { user } = this.props;
@@ -180,6 +218,7 @@ class Messages extends Component {
                 message={message}
                 user={user}
                 onRemove={this.showRemoveMessageModal}
+                onEdit={this.showEditMessageModal}
               />
             </div>
           ))}
@@ -218,8 +257,50 @@ class Messages extends Component {
             </Modal.Dialog>
           </div>
         ) : null}
+
+        {showEditModal ? (
+          <div className="modal-bg">
+            <Modal.Dialog className="edit-post-modal">
+              <Modal.Header>
+                <input
+                  type="text"
+                  className="edit-post-input"
+                  onChange={this.handleChange}
+                  value={changedTitle}
+                  name="changedTitle"
+                  placeholder="Title"
+                  autoComplete="off"
+                  autoFocus="on"
+                />
+              </Modal.Header>
+
+              <Modal.Footer>
+                <Button
+                  className="close-edit-post-modal-btn"
+                  variant="secondary"
+                  onClick={this.hideEditMessageModel}
+                >
+                  Close
+                </Button>
+                <Button
+                  variant="primary"
+                  className={this.disableBtn(changedTitle)}
+                  onClick={this.editMessage}
+                >
+                  Save changes
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </div>
+        ) : null}
       </div>
     );
+  }
+
+  disableBtn(changedTitle) {
+    let classes = "";
+    classes += changedTitle ? "" : " -disabled";
+    return classes;
   }
 }
 

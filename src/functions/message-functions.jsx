@@ -67,6 +67,7 @@ const fetchDeletedMessagesForCurrentUser = (user) => {
     .then((res) =>
       res.docs.map((doc) => {
         const { removedMessageIds } = doc.data();
+
         if (removedMessageIds) {
           return removedMessageIds;
         } else {
@@ -76,10 +77,40 @@ const fetchDeletedMessagesForCurrentUser = (user) => {
     );
 };
 
+const removeDeletedMessages = (message) => {
+  return db
+    .collection("users")
+    .get()
+    .then((res) => res.docs.map((doc) => doc.id))
+    .then((userIds) =>
+      userIds.map((userId) => {
+        return db
+          .collection("users")
+          .doc(userId)
+          .update({
+            removedMessageIds: firebase.firestore.FieldValue.arrayRemove(
+              message.id
+            ),
+          });
+      })
+    );
+};
+
+const updateMessage = (message, title) => {
+  return db.collection("messages").doc(message.id).set(
+    {
+      title,
+    },
+    { merge: true }
+  );
+};
+
 export {
   createMessage,
   fetchMessages,
   deleteMessage,
   addDeletedMessageForCurrentUser,
   fetchDeletedMessagesForCurrentUser,
+  removeDeletedMessages,
+  updateMessage,
 };

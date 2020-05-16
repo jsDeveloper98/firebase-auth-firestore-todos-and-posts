@@ -17,6 +17,7 @@ const db = firebase.firestore();
 
 class Todo extends Component {
   _isMounted = false;
+
   state = {
     todos: [],
     title: "",
@@ -90,9 +91,10 @@ class Todo extends Component {
 
   componentWillUnmount = () => {
     this._isMounted = false;
+    const { unsubscribeToTodos } = this.state;
 
-    if (_.isFunction(this.state.unsubscribeToTodos)) {
-      this.state.unsubscribeToTodos();
+    if (_.isFunction(unsubscribeToTodos)) {
+      unsubscribeToTodos();
     }
   };
 

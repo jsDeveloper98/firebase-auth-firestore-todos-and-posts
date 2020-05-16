@@ -497,15 +497,30 @@ body {
           margin-left: 8px;
           position: relative;
 
+          .edit-message {
+            width: 22px;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            display: none;
+            cursor: pointer;
+          }
+
           .remove-message {
             position: absolute;
             top: -3px;
-            right: 0;
+            right: 2px;
             font-size: 21px;
             font-weight: bold;
             cursor: pointer;
             display: none;
             color: $red;
+          }
+
+          &:hover {
+            .edit-message {
+              display: block !important;
+            }
           }
 
           &:hover {

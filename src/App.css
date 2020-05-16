@@ -414,15 +414,36 @@ body
   .messages-main
   .read-container
   .message-wrapper
+  .edit-message {
+  width: 22px;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  display: none;
+  cursor: pointer;
+}
+body
+  .chat-container
+  .messages-main
+  .read-container
+  .message-wrapper
   .remove-message {
   position: absolute;
   top: -3px;
-  right: 0;
+  right: 2px;
   font-size: 21px;
   font-weight: bold;
   cursor: pointer;
   display: none;
   color: #970000;
+}
+body
+  .chat-container
+  .messages-main
+  .read-container
+  .message-wrapper:hover
+  .edit-message {
+  display: block !important;
 }
 body
   .chat-container

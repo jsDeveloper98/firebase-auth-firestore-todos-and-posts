@@ -13,6 +13,7 @@ const db = firebase.firestore();
 
 class Posts extends Component {
   _isMounted = false;
+
   state = {
     posts: [],
     search: "",
@@ -134,13 +135,15 @@ class Posts extends Component {
       changedDescription,
     } = this.state;
 
-    if (!this.props.user) {
+    const { user } = this.props;
+
+    if (!user) {
       return <Redirect to="/signin" />;
     }
 
     const selectedPosts = posts.filter((post) => {
       if (filterPosts) {
-        return post.user === this.props.user.uid;
+        return post.user === user.uid;
       } else {
         return posts;
       }
@@ -197,7 +200,7 @@ class Posts extends Component {
                   <Post
                     key={post.id}
                     post={post}
-                    user={this.props.user}
+                    user={user}
                     onRemove={this.removePost}
                     onEdit={this.showEditModal}
                   />

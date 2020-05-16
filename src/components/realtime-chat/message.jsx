@@ -1,6 +1,7 @@
 import React from "react";
+import editIcon from "../../images/edit.png";
 
-const Message = ({ message, user, onRemove }) => {
+const Message = ({ message, user, onRemove, onEdit }) => {
   return (
     <div className={detectCurrentUsersMessages(user, message)}>
       <div className="message-author-name">{message.authorName}</div>
@@ -10,8 +11,16 @@ const Message = ({ message, user, onRemove }) => {
         {message.title}
       </div>
 
-      <div className="remove-message" onClick={() => onRemove(message)}>
-        ✗
+      <div className="message-settings">
+        <div className="remove-message" onClick={() => onRemove(message)}>
+          ✗
+        </div>
+        <img
+          className="edit-message"
+          src={editIcon}
+          alt="edit"
+          onClick={() => onEdit(message)}
+        />
       </div>
     </div>
   );
