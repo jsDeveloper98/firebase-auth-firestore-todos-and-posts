@@ -692,6 +692,12 @@ body {
   border-radius: 10px;
 }
 
+@media only screen and (max-width: 1100px) {
+  .users-container {
+    display: none;
+  }
+}
+
 @media only screen and (max-width: 1000px) {
   .post-item {
     width: 100% !important;

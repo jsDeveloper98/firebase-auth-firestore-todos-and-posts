@@ -17,7 +17,6 @@ const fetchUsers = () => {
     .then((res) =>
       res.docs.map((doc) => {
         const { email, username, uid, isOnline } = doc.data();
-        console.log("aloooo");
 
         return {
           id: doc.id,
