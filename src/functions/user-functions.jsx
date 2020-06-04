@@ -29,38 +29,4 @@ const fetchUsers = () => {
     );
 };
 
-const setOnline = ({ user }) => {
-  return db
-    .collection("users")
-    .where("uid", "==", user.uid)
-    .get()
-    .then((res) =>
-      res.docs.map((doc) => {
-        return db.collection("users").doc(doc.id).set(
-          {
-            isOnline: true,
-          },
-          { merge: true }
-        );
-      })
-    );
-};
-
-const setOffline = (user) => {
-  return db
-    .collection("users")
-    .where("uid", "==", user.uid)
-    .get()
-    .then((res) =>
-      res.docs.map((doc) => {
-        return db.collection("users").doc(doc.id).set(
-          {
-            isOnline: false,
-          },
-          { merge: true }
-        );
-      })
-    );
-};
-
-export { createUser, fetchUsers, setOnline, setOffline };
+export { createUser, fetchUsers };
