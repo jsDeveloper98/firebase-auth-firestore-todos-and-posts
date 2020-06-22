@@ -1,5 +1,6 @@
 import firebase from "../config/firebase";
 const db = firebase.firestore();
+const _ = require("lodash");
 
 const createPost = (title, description, user) => {
   return db
@@ -18,27 +19,6 @@ const createPost = (title, description, user) => {
     });
 };
 
-const fetchPosts = () => {
-  return db
-    .collection("posts")
-    .orderBy("createdAt", "desc")
-    .get()
-    .then((res) =>
-      res.docs.map((doc) => {
-        const { title, description, createdAt, user, authorName } = doc.data();
-
-        return {
-          id: doc.id,
-          title,
-          description,
-          createdAt,
-          user,
-          authorName,
-        };
-      })
-    );
-};
-
 const deletePost = (post) => {
   return db.collection("posts").doc(post.id).delete();
 };
@@ -53,4 +33,31 @@ const updatePost = (post, title, description) => {
   );
 };
 
-export { createPost, fetchPosts, deletePost, updatePost };
+const subscribeToPosts = (callback = null) => {
+  const unsubscribe = db
+    .collection("posts")
+    .orderBy("createdAt", "desc")
+    .onSnapshot((snap) => {
+      const posts = [];
+
+      snap.docs.forEach((doc) => {
+        const { title, description, createdAt, user, authorName } = doc.data();
+
+        posts.push({
+          id: doc.id,
+          title,
+          description,
+          createdAt,
+          user,
+          authorName,
+        });
+      });
+
+      if (_.isFunction(callback)) {
+        callback(posts);
+      }
+    });
+  return unsubscribe;
+};
+
+export { createPost, deletePost, updatePost, subscribeToPosts };
