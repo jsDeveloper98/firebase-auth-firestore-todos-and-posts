@@ -258,6 +258,7 @@ body {
       color: $white;
       z-index: 10;
       border-bottom: 1px solid $border;
+      outline: none !important;
     }
 
     .todo-list {

@@ -6,7 +6,6 @@ const createUser = (user, username) => {
     uid: user.user.uid,
     username,
     email: user.user.email,
-    isOnline: false,
   });
 };
 
@@ -16,14 +15,13 @@ const fetchUsers = () => {
     .get()
     .then((res) =>
       res.docs.map((doc) => {
-        const { email, username, uid, isOnline } = doc.data();
+        const { email, username, uid } = doc.data();
 
         return {
           id: doc.id,
           email,
           username,
           uid,
-          isOnline,
         };
       })
     );
