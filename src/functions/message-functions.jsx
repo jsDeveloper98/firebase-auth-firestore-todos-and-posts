@@ -66,7 +66,7 @@ const addDeletedMessageForCurrentUser = (user, message) => {
     });
 };
 
-const subscribeToRemovedMessages = (user, callback) => {
+const subscribeToRemovedMessages = (user, callback = null) => {
   const unsubscribe = db
     .collection("users")
     .where("uid", "==", user.uid)
