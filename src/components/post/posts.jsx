@@ -14,11 +14,11 @@ class Posts extends Component {
 
   state = {
     posts: [],
-    search: "",
     filterPosts: false,
     showEdit: false,
     postToEdit: null,
     unsubscribeToPosts: null,
+    search: "",
     changedTitle: "",
     changedDescription: "",
   };
@@ -34,6 +34,8 @@ class Posts extends Component {
   };
 
   subscribeToPosts = () => {
+    this.unsubscribePosts();
+
     const callback = (posts) => {
       this.setState({ posts, loading: false });
     };
@@ -42,13 +44,17 @@ class Posts extends Component {
     this.setState({ unsubscribeToPosts });
   };
 
-  componentWillUnmount = () => {
-    this._isMounted = false;
+  unsubscribePosts = () => {
     const { unsubscribeToPosts } = this.state;
 
     if (_.isFunction(unsubscribeToPosts)) {
       unsubscribeToPosts();
     }
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
+    this.unsubscribePosts();
   };
 
   removePost = (post) => {

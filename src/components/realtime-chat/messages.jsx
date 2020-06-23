@@ -1,18 +1,16 @@
 import React, { Component } from "react";
 import {
   createMessage,
-  fetchMessages,
   deleteMessage,
+  subscribeToMessages,
   addDeletedMessageForCurrentUser,
-  fetchDeletedMessagesForCurrentUser,
+  subscribeToRemovedMessages,
   removeDeletedMessages,
   updateMessage,
 } from "../../functions/message-functions";
-import firebase from "../../config/firebase";
 import Message from "./message";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Spinner } from "react-bootstrap";
 const _ = require("lodash");
-const db = firebase.firestore();
 
 class Messages extends Component {
   _isMounted = false;
@@ -31,80 +29,65 @@ class Messages extends Component {
 
   componentDidMount = () => {
     this._isMounted = true;
-    const { user } = this.props;
-
-    const unsubscribeToMessages = this.subscribeToMessages();
 
     if (this._isMounted) {
-      this.setState({ unsubscribeToMessages });
-    }
-
-    fetchMessages().then((messages) => {
-      if (this._isMounted) {
-        this.setState({ messages });
-      }
-    });
-
-    if (!_.isEmpty(user)) {
-      this.subscribeToRemovedMessages(user);
-
-      fetchDeletedMessagesForCurrentUser(user).then((removedMessageIds) => {
-        if (this._isMounted) {
-          const newMessages = _.flatten(removedMessageIds);
-          this.setState({ removedMessageIds: newMessages });
-        }
+      this.setState({ loading: true }, () => {
+        this.subscribeToMessages();
+        this.subscribeToRemovedMessages();
       });
     }
   };
 
   subscribeToMessages = () => {
-    const unsubscribe = db
-      .collection("messages")
-      .orderBy("createdAt", "asc")
-      .onSnapshot((snap) => {
-        const messages = [];
-        snap.docs.map((doc) => {
-          const { title, createdAt, user, authorName } = doc.data();
+    this.unsubscribeMessages();
 
-          return messages.push({
-            id: doc.id,
-            title,
-            createdAt,
-            user,
-            authorName,
-          });
-        });
+    const callback = (messages) => {
+      this.setState({ messages, loading: false });
+    };
 
-        if (this._isMounted) {
-          this.setState({ messages });
-        }
-      });
-    return unsubscribe;
+    const unsubscribeToMessages = subscribeToMessages(callback);
+    this.setState({ unsubscribeToMessages });
   };
 
-  subscribeToRemovedMessages = (user) => {
-    const unsubscribe = db
-      .collection("users")
-      .where("uid", "==", user.uid)
-      .onSnapshot((snap) => {
-        snap.docs.forEach((doc) => {
-          const { removedMessageIds } = doc.data();
-
-          if (this._isMounted) {
-            this.setState({ removedMessageIds });
-          }
-        });
-      });
-    return unsubscribe;
-  };
-
-  componentWillUnmount = () => {
-    this._isMounted = false;
+  unsubscribeMessages = () => {
     const { unsubscribeToMessages } = this.state;
 
     if (_.isFunction(unsubscribeToMessages)) {
       unsubscribeToMessages();
     }
+  };
+
+  subscribeToRemovedMessages = () => {
+    const { user } = this.props;
+    this.unsubscribeRemovedMessages();
+
+    if (_.isEmpty(user)) {
+      return;
+    }
+
+    const callback = (removedMessageIds) => {
+      this.setState({ removedMessageIds });
+    };
+
+    const unsubscribeToRemovedMessages = subscribeToRemovedMessages(
+      user,
+      callback
+    );
+    this.setState({ unsubscribeToRemovedMessages });
+  };
+
+  unsubscribeRemovedMessages = () => {
+    const { unsubscribeToRemovedMessages } = this.state;
+
+    if (_.isFunction(unsubscribeToRemovedMessages)) {
+      unsubscribeToRemovedMessages();
+    }
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
+    this.unsubscribeMessages();
+    this.unsubscribeRemovedMessages();
   };
 
   handleChange = (e) => {
@@ -201,6 +184,7 @@ class Messages extends Component {
       value,
       messageToRemove,
       changedTitle,
+      loading,
     } = this.state;
 
     const { user } = this.props;
@@ -216,17 +200,29 @@ class Messages extends Component {
     return (
       <div className="messages-main">
         <div className="read-container" id="container">
-          {filteredMessages.map((message, i) => (
-            <div className="message" key={i}>
-              <Message
-                key={message.id}
-                message={message}
-                user={user}
-                onRemove={this.showRemoveMessageModal}
-                onEdit={this.showEditMessageModal}
-              />
+          {filteredMessages.length ? (
+            <React.Fragment>
+              {filteredMessages.map((message, i) => (
+                <div className="message" key={i}>
+                  <Message
+                    key={message.id}
+                    message={message}
+                    user={user}
+                    onRemove={this.showRemoveMessageModal}
+                    onEdit={this.showEditMessageModal}
+                  />
+                </div>
+              ))}
+            </React.Fragment>
+          ) : (
+            <div className="empty-messages">
+              {loading ? (
+                <Spinner animation="border" variant="secondary" />
+              ) : (
+                <h1>No Messages</h1>
+              )}
             </div>
-          ))}
+          )}
         </div>
         <div className="write-container">
           <input

@@ -1,5 +1,6 @@
 import firebase from "../config/firebase";
 const db = firebase.firestore();
+const _ = require("lodash");
 
 const createMessage = (value, user) => {
   return db
@@ -17,24 +18,30 @@ const createMessage = (value, user) => {
     });
 };
 
-const fetchMessages = () => {
-  return db
+const subscribeToMessages = (callback = null) => {
+  const unsubscribe = db
     .collection("messages")
     .orderBy("createdAt", "asc")
-    .get()
-    .then((res) =>
-      res.docs.map((doc) => {
+    .onSnapshot((snap) => {
+      const messages = [];
+
+      snap.docs.forEach((doc) => {
         const { title, createdAt, user, authorName } = doc.data();
 
-        return {
+        messages.push({
           id: doc.id,
           title,
           createdAt,
           user,
           authorName,
-        };
-      })
-    );
+        });
+      });
+
+      if (_.isFunction(callback)) {
+        callback(messages);
+      }
+    });
+  return unsubscribe;
 };
 
 const deleteMessage = (message) => {
@@ -59,22 +66,20 @@ const addDeletedMessageForCurrentUser = (user, message) => {
     });
 };
 
-const fetchDeletedMessagesForCurrentUser = (user) => {
-  return db
+const subscribeToRemovedMessages = (user, callback) => {
+  const unsubscribe = db
     .collection("users")
     .where("uid", "==", user.uid)
-    .get()
-    .then((res) =>
-      res.docs.map((doc) => {
+    .onSnapshot((snap) =>
+      snap.docs.forEach((doc) => {
         const { removedMessageIds } = doc.data();
 
-        if (removedMessageIds) {
-          return removedMessageIds;
-        } else {
-          return null;
+        if (_.isFunction(callback)) {
+          callback(removedMessageIds);
         }
       })
     );
+  return unsubscribe;
 };
 
 const removeDeletedMessages = (message) => {
@@ -107,10 +112,10 @@ const updateMessage = (message, title) => {
 
 export {
   createMessage,
-  fetchMessages,
+  subscribeToMessages,
   deleteMessage,
   addDeletedMessageForCurrentUser,
-  fetchDeletedMessagesForCurrentUser,
+  subscribeToRemovedMessages,
   removeDeletedMessages,
   updateMessage,
 };
