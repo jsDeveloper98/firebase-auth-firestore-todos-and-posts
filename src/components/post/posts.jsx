@@ -1,26 +1,24 @@
 import React, { Component } from "react";
 import Post from "./post";
 import {
-  fetchPosts,
   deletePost,
   updatePost,
+  subscribeToPosts,
 } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
 import { Spinner, Modal, Button } from "react-bootstrap";
-import firebase from "../../config/firebase";
 const _ = require("lodash");
-const db = firebase.firestore();
 
 class Posts extends Component {
   _isMounted = false;
 
   state = {
     posts: [],
-    search: "",
     filterPosts: false,
     showEdit: false,
     postToEdit: null,
     unsubscribeToPosts: null,
+    search: "",
     changedTitle: "",
     changedDescription: "",
   };
@@ -28,61 +26,35 @@ class Posts extends Component {
   componentDidMount = () => {
     this._isMounted = true;
 
-    this.setState({ loading: true }, () => {
-      const unsubscribeToPosts = this.subscribeToPosts();
-
-      if (this._isMounted) {
-        this.setState({ unsubscribeToPosts });
-      }
-
-      fetchPosts().then((posts) => {
-        if (this._isMounted) {
-          this.setState({
-            posts,
-            loading: false,
-          });
-        }
+    if (this._isMounted) {
+      this.setState({ loading: true }, () => {
+        this.subscribeToPosts();
       });
-    });
+    }
   };
 
   subscribeToPosts = () => {
-    const unsubscribe = db
-      .collection("posts")
-      .orderBy("createdAt", "desc")
-      .onSnapshot((snap) => {
-        const posts = [];
-        snap.docs.map((doc) => {
-          const {
-            title,
-            description,
-            createdAt,
-            user,
-            authorName,
-          } = doc.data();
+    this.unsubscribePosts();
 
-          return posts.push({
-            id: doc.id,
-            title,
-            description,
-            createdAt,
-            user,
-            authorName,
-          });
-        });
-        if (this._isMounted) {
-          this.setState({ posts });
-        }
-      });
-    return unsubscribe;
+    const callback = (posts) => {
+      this.setState({ posts, loading: false });
+    };
+
+    const unsubscribeToPosts = subscribeToPosts(callback);
+    this.setState({ unsubscribeToPosts });
+  };
+
+  unsubscribePosts = () => {
+    const { unsubscribeToPosts } = this.state;
+
+    if (_.isFunction(unsubscribeToPosts)) {
+      unsubscribeToPosts();
+    }
   };
 
   componentWillUnmount = () => {
     this._isMounted = false;
-
-    if (_.isFunction(this.state.unsubscribeToPosts)) {
-      this.state.unsubscribeToPosts();
-    }
+    this.unsubscribePosts();
   };
 
   removePost = (post) => {

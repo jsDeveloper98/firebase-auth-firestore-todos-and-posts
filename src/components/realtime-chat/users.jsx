@@ -36,14 +36,13 @@ class Users extends Component {
       const users = [];
 
       snap.docs.forEach((doc) => {
-        const { email, username, uid, isOnline } = doc.data();
+        const { email, username, uid } = doc.data();
 
         users.push({
           id: doc.id,
           email,
           username,
           uid,
-          isOnline,
         });
       });
 
