@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Form, Button } from "react-bootstrap";
 import { createPost } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
+import HelperForm from "../../reusable-components/Form";
 
 class CreatePost extends Component {
   state = {
@@ -36,41 +36,13 @@ class CreatePost extends Component {
     }
 
     return (
-      <Form className="form-settings">
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label className="label-settings">Title</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Title"
-            name="title"
-            onChange={this.handleChange}
-            value={title}
-            autoComplete="off"
-            className="input-settings"
-          />
-        </Form.Group>
-
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label className="label-settings">Description</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Description"
-            name="description"
-            onChange={this.handleChange}
-            value={description}
-            autoComplete="off"
-            className="input-settings"
-          />
-        </Form.Group>
-        <Button
-          className={this.disableBtn(title, description)}
-          variant="secondary"
-          type="submit"
-          onClick={this.createPost}
-        >
-          Create Post
-        </Button>
-      </Form>
+      <HelperForm
+        title={title}
+        description={description}
+        handleChange={this.handleChange}
+        disableBtn={this.disableBtn}
+        createPost={this.createPost}
+      />
     );
   }
 

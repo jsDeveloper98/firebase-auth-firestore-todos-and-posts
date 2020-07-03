@@ -107,7 +107,9 @@ class Todo extends Component {
   };
 
   removeCompletedTodos = () => {
-    removeAllCompleted();
+    const completedTodos = this.state.todos.filter((todo) => todo.done);
+
+    removeAllCompleted(completedTodos);
   };
 
   toggleDone = (todo) => {
@@ -115,7 +117,9 @@ class Todo extends Component {
   };
 
   doneAllTodos = () => {
-    completeAllTodos();
+    const activeTodos = this.state.todos.filter((todo) => !todo.done);
+
+    completeAllTodos(activeTodos);
   };
 
   render() {

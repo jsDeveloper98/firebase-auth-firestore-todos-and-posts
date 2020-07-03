@@ -44,35 +44,21 @@ const toggleCheck = (todo) => {
   );
 };
 
-const removeAllCompleted = () => {
-  return db
-    .collection("todos")
-    .where("done", "==", true)
-    .get()
-    .then((res) => res.docs.map((doc) => doc.id))
-    .then((doneTodoIds) =>
-      doneTodoIds.map((doneTodoId) => {
-        return db.collection("todos").doc(doneTodoId).delete();
-      })
-    );
+const removeAllCompleted = (completedTodos) => {
+  completedTodos.map((completedTodo) => {
+    return db.collection("todos").doc(completedTodo.id).delete();
+  });
 };
 
-const completeAllTodos = () => {
-  return db
-    .collection("todos")
-    .where("done", "==", false)
-    .get()
-    .then((res) => res.docs.map((doc) => doc.id))
-    .then((activeTodoIds) =>
-      activeTodoIds.map((activeTodoId) => {
-        return db.collection("todos").doc(activeTodoId).set(
-          {
-            done: true,
-          },
-          { merge: true }
-        );
-      })
+const completeAllTodos = (activeTodos) => {
+  activeTodos.map((activeTodo) => {
+    return db.collection("todos").doc(activeTodo.id).set(
+      {
+        done: true,
+      },
+      { merge: true }
     );
+  });
 };
 
 export {
