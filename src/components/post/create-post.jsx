@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { createPost } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
-import HelperForm from "../../reusable-components/Form";
+import HelperForm from "../../reusable-components/form";
 
 class CreatePost extends Component {
   state = {
@@ -37,19 +37,13 @@ class CreatePost extends Component {
 
     return (
       <HelperForm
-        title={title}
-        description={description}
+        val1={title}
+        val2={description}
         handleChange={this.handleChange}
-        disableBtn={this.disableBtn}
-        createPost={this.createPost}
+        submit={this.createPost}
+        post={true}
       />
     );
-  }
-
-  disableBtn(title, description) {
-    let classes = "form-button";
-    classes += title && description ? "" : " -disabled";
-    return classes;
   }
 }
 
