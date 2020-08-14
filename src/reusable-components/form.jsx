@@ -2,33 +2,24 @@ import React from "react";
 import { Form, Button } from "react-bootstrap";
 import { capitalize } from "lodash";
 
-const HelperForm = ({
-  val1,
-  val2,
-  val3,
-  handleChange,
-  submit,
-  post,
-  signIn,
-  signUp,
-}) => {
+const HelperForm = ({ val1, val2, val3, handleChange, submit, prop }) => {
   let val1Name;
   let val2Name;
   let val3Name;
   let val2Type;
   let btnText;
 
-  if (post) {
+  if (prop === "post") {
     val1Name = "title";
     val2Name = "description";
     val2Type = "text";
     btnText = "Create Post";
-  } else if (signIn) {
+  } else if (prop === "signin") {
     val1Name = "email";
     val2Name = "password";
     val2Type = "password";
     btnText = "Sign In";
-  } else if (signUp) {
+  } else if (prop === "signup") {
     val1Name = "email";
     val2Name = "password";
     val2Type = "password";
@@ -38,7 +29,7 @@ const HelperForm = ({
 
   return (
     <Form className="form-settings">
-      {signUp ? (
+      {prop === "signup" ? (
         <Form.Group controlId="formBasicUsername">
           <Form.Label className="label-settings">Username</Form.Label>
           <Form.Control
@@ -83,7 +74,7 @@ const HelperForm = ({
         />
       </Form.Group>
       <Button
-        className={post && (!val1 || !val2) ? " -disabled" : ""}
+        className={prop === "post" && (!val1 || !val2) ? " -disabled" : ""}
         variant="secondary"
         type="submit"
         onClick={submit}

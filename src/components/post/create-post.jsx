@@ -41,7 +41,7 @@ class CreatePost extends Component {
         val2={description}
         handleChange={this.handleChange}
         submit={this.createPost}
-        post={true}
+        prop="post"
       />
     );
   }

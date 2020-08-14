@@ -41,7 +41,7 @@ class SignIn extends Component {
         val2={password}
         handleChange={this.handleChange}
         submit={this.signIn}
-        signIn={true}
+        prop="signin"
       />
     );
   }

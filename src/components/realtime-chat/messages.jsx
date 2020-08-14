@@ -232,6 +232,7 @@ class Messages extends Component {
             onChange={this.handleChange}
             name="value"
             onKeyDown={this.handleKeyDown}
+            autoComplete="off"
           />
         </div>
 
