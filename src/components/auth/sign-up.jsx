@@ -1,19 +1,19 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import firebase from "../../config/firebase";
 import { Redirect } from "react-router-dom";
 import { createUser } from "../../functions/user-functions";
 import HelperForm from "../../reusable-components/form";
 
-class SignIn extends Component {
-  state = {
+const SignIn = ({ user }) => {
+  const [state, setState] = useState({
     username: "",
     email: "",
     password: "",
-  };
+  });
 
-  signUp = (e) => {
+  const signUp = (e) => {
     e.preventDefault();
-    const { username, email, password } = this.state;
+    const { username, email, password } = state;
 
     firebase
       .auth()
@@ -27,30 +27,27 @@ class SignIn extends Component {
       });
   };
 
-  handleChange = (e) => {
-    this.setState({
+  const handleChange = (e) => {
+    setState({
+      ...state,
       [e.target.name]: e.target.value,
     });
   };
 
-  render() {
-    const { email, password, username } = this.state;
+  return (
+    <>
+      {user ? <Redirect to="/" /> : null}
 
-    if (this.props.user) {
-      return <Redirect to="/" />;
-    }
-
-    return (
       <HelperForm
-        val1={email}
-        val2={password}
-        val3={username}
-        handleChange={this.handleChange}
-        submit={this.signUp}
+        val1={state.email}
+        val2={state.password}
+        val3={state.username}
+        handleChange={handleChange}
+        submit={signUp}
         prop="signup"
       />
-    );
-  }
-}
+    </>
+  );
+};
 
 export default SignIn;

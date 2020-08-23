@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const NavBar = ({ logOut, user }) => {
   return (
-    <React.Fragment>
+    <>
       {user ? (
         <React.Fragment>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -48,7 +48,7 @@ const NavBar = ({ logOut, user }) => {
           </Navbar.Collapse>
         </Navbar>
       )}
-    </React.Fragment>
+    </>
   );
 };
 
