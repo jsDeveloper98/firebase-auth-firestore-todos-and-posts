@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import Post from "./post";
 import {
   deletePost,
   updatePost,
   subscribeToPosts,
 } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
-import { Spinner, Modal, Button } from "react-bootstrap";
+import EditModal from "../../reusable-components/edit-modal";
+import PostsInfo from "./posts-info";
 const _ = require("lodash");
 
 const Posts = ({ user }) => {
@@ -127,118 +127,29 @@ const Posts = ({ user }) => {
     <>
       {!user ? <Redirect to="/signin" /> : null}
 
-      <div className="posts">
-        <div className="container post-filters">
-          <input
-            type="search"
-            placeholder="Search Post by Title or Description..."
-            className="search-posts"
-            autoComplete="off"
-            value={state.search}
-            onChange={handleChange}
-            name="search"
-          />
-          <label className="filter-posts-label">My Posts</label>
-          <label>
-            <div className="toggle">
-              <input
-                className="toggle-state"
-                type="checkbox"
-                onChange={handleCheck}
-              />
-              <div className="toggle-inner">
-                <div className="indicator"></div>
-              </div>
-              <div className="active-bg"></div>
-            </div>
-            <div className="label-text"></div>
-          </label>
-        </div>
+      <PostsInfo
+        onChange={handleChange}
+        onCheck={handleCheck}
+        onRemove={removePost}
+        onShow={showEditModal}
+        value={state.search}
+        posts={filteredPosts}
+        user={user}
+        isLoading={state.loading}
+      />
 
-        {filteredPosts.length ? (
-          <div className="container posts-list">
-            {filteredPosts.map((post, i) => (
-              <div className="post-item" key={i}>
-                <Post
-                  key={post.id}
-                  post={post}
-                  user={user}
-                  onRemove={removePost}
-                  onEdit={showEditModal}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="empty-posts">
-            {state.loading ? (
-              <Spinner animation="border" variant="secondary" />
-            ) : (
-              <React.Fragment>
-                {!state.search ? <h1>No Posts</h1> : <h1>No Search Result</h1>}
-              </React.Fragment>
-            )}
-          </div>
-        )}
-      </div>
       {state.showEdit ? (
-        <div className="modal-bg">
-          <Modal.Dialog className="edit-post-modal">
-            <Modal.Header>
-              <input
-                type="text"
-                className="edit-post-input"
-                onChange={handleChange}
-                value={state.changedTitle}
-                name="changedTitle"
-                placeholder="Title"
-                autoComplete="off"
-                autoFocus="on"
-              />
-            </Modal.Header>
-
-            <Modal.Body>
-              <input
-                type="text"
-                className="edit-post-input"
-                onChange={handleChange}
-                value={state.changedDescription}
-                name="changedDescription"
-                placeholder="Description"
-                autoComplete="off"
-              />
-            </Modal.Body>
-
-            <Modal.Footer>
-              <Button
-                className="close-edit-post-modal-btn"
-                variant="secondary"
-                onClick={hideEditModal}
-              >
-                Close
-              </Button>
-              <Button
-                variant="primary"
-                className={disableBtn(
-                  state.changedTitle,
-                  state.changedDescription
-                )}
-                onClick={editPost}
-              >
-                Save changes
-              </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </div>
+        <EditModal
+          onHide={hideEditModal}
+          onChange={handleChange}
+          onRemove={removePost}
+          onEdit={editPost}
+          changedTitle={state.changedTitle}
+          changedDescription={state.changedDescription}
+        />
       ) : null}
     </>
   );
-};
-
-const disableBtn = (changedTitle, changedDescription) => {
-  let classes = "";
-  classes += changedTitle && changedDescription ? "" : " -disabled";
-  return classes;
 };
 
 export default Posts;
