@@ -3,17 +3,17 @@ import { Redirect } from "react-router-dom";
 import BootstrapJumbotron from "../../reusable-components/bootstrap-jumbotreon";
 
 const Post = ({ onEdit, onRemove, post, user }) => {
-  if (!user) {
-    return <Redirect to="/signin" />;
-  }
-
   return (
-    <BootstrapJumbotron
-      onEdit={onEdit}
-      onRemove={onRemove}
-      post={post}
-      user={user}
-    />
+    <>
+      {!user ? <Redirect to="/signin" /> : null}
+
+      <BootstrapJumbotron
+        onEdit={onEdit}
+        onRemove={onRemove}
+        post={post}
+        user={user}
+      />
+    </>
   );
 };
 

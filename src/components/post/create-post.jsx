@@ -1,50 +1,48 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { createPost } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
 import HelperForm from "../../reusable-components/form";
 
-class CreatePost extends Component {
-  state = {
+const CreatePost = ({ user }) => {
+  const [state, setState] = useState({
     title: "",
     description: "",
-  };
+  });
 
-  handleChange = (e) => {
-    this.setState({
+  const handleChange = (e) => {
+    setState({
+      ...state,
       [e.target.name]: e.target.value,
     });
   };
 
-  createPost = (e) => {
+  const addPost = (e) => {
     e.preventDefault();
-    const { title, description } = this.state;
+    const { title, description } = state;
 
     if (title && description) {
-      createPost(title, description, this.props.user);
+      createPost(title, description, user);
     }
-    this.setState({
+
+    setState({
       title: "",
       description: "",
     });
   };
 
-  render() {
-    const { title, description } = this.state;
+  return (
+    <>
+      {!user ? <Redirect to="/signin" /> : null}
 
-    if (!this.props.user) {
-      return <Redirect to="/signin" />;
-    }
-
-    return (
       <HelperForm
-        val1={title}
-        val2={description}
-        handleChange={this.handleChange}
-        submit={this.createPost}
+        val1={state.title}
+        val2={state.description}
+        handleChange={handleChange}
+        submit={addPost}
         prop="post"
       />
-    );
-  }
-}
+    </>
+  );
+};
 
 export default CreatePost;

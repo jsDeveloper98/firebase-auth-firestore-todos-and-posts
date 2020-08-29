@@ -201,7 +201,7 @@ class Messages extends Component {
       <div className="messages-main">
         <div className="read-container" id="container">
           {filteredMessages.length ? (
-            <React.Fragment>
+            <>
               {filteredMessages.map((message, i) => (
                 <div className="message" key={i}>
                   <Message
@@ -213,7 +213,7 @@ class Messages extends Component {
                   />
                 </div>
               ))}
-            </React.Fragment>
+            </>
           ) : (
             <div className="empty-messages">
               {loading ? (

@@ -3,7 +3,7 @@ import TodoItem from "./todo-item";
 
 const TodoList = ({ onRemove, todos, toggleDone }) => {
   return (
-    <React.Fragment>
+    <>
       {todos.map((todo, i) => (
         <div className="todo-item" key={i}>
           <TodoItem
@@ -14,7 +14,7 @@ const TodoList = ({ onRemove, todos, toggleDone }) => {
           />
         </div>
       ))}
-    </React.Fragment>
+    </>
   );
 };
 

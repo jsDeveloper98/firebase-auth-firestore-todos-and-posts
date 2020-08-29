@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { fetchUsers } from "../../functions/user-functions";
+import { subscribeToUsers } from "../../functions/user-functions";
 import User from "./user";
-import firebase from "../../config/firebase";
 const _ = require("lodash");
-const db = firebase.firestore();
 
 class Users extends Component {
   _isMounted = false;
@@ -16,41 +14,22 @@ class Users extends Component {
   componentDidMount = () => {
     this._isMounted = true;
 
-    const unsubscribeToUsers = this.subscribeToUsers();
-
     if (this._isMounted) {
-      this.setState({ unsubscribeToUsers });
-    }
-
-    if (this._isMounted) {
-      fetchUsers().then((users) => {
-        if (this._isMounted) {
-          this.setState({ users });
-        }
-      });
+      this.subscribeToUsers();
     }
   };
 
   subscribeToUsers = () => {
-    const unsubscribe = db.collection("users").onSnapshot((snap) => {
-      const users = [];
+    if (_.isFunction(this.unsubscribeToUsers)) {
+      this.unsubscribeToUsers();
+    }
 
-      snap.docs.forEach((doc) => {
-        const { email, username, uid } = doc.data();
+    const callback = (users) => {
+      this.setState({ users });
+    };
 
-        users.push({
-          id: doc.id,
-          email,
-          username,
-          uid,
-        });
-      });
-
-      if (this._isMounted) {
-        this.setState({ users });
-      }
-    });
-    return unsubscribe;
+    const unsubscribeToUsers = subscribeToUsers(callback);
+    this.setState({ unsubscribeToUsers });
   };
 
   componentWillUnmount = () => {

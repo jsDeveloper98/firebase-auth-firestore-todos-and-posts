@@ -5,15 +5,13 @@ import { Redirect } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import {
   createTodo,
-  fetchTodos,
   deleteTodo,
   toggleCheck,
   removeAllCompleted,
   completeAllTodos,
+  subscribeToTodos,
 } from "../../functions/todo-functions";
-import firebase from "../../config/firebase";
 const _ = require("lodash");
-const db = firebase.firestore();
 
 class Todo extends Component {
   _isMounted = false;
@@ -34,41 +32,21 @@ class Todo extends Component {
         const unsubscribeToTodos = this.subscribeToTodos(user);
 
         this.setState({ unsubscribeToTodos });
-
-        fetchTodos(user).then((todos) => {
-          if (this._isMounted) {
-            this.setState({
-              todos,
-              loading: false,
-            });
-          }
-        });
       }
     });
   };
 
   subscribeToTodos = (user) => {
-    const unsubscribe = db
-      .collection("todos")
-      .where("user", "==", user.uid)
-      .orderBy("createdAt", "desc")
-      .onSnapshot((snap) => {
-        const todos = [];
-        snap.docs.map((doc) => {
-          const { title, done, createdAt, user } = doc.data();
+    if (_.isFunction(this.unsubscribeToTodos)) {
+      this.unsubscribeToTodos();
+    }
 
-          return todos.push({
-            id: doc.id,
-            title,
-            done,
-            createdAt,
-            user,
-          });
-        });
+    const callback = (todos) => {
+      this.setState({ todos, loading: false });
+    };
 
-        this.setState({ todos });
-      });
-    return unsubscribe;
+    const unsubscribeToTodos = subscribeToTodos(callback, user.uid);
+    this.setState({ unsubscribeToTodos });
   };
 
   handleChange = (e) => {

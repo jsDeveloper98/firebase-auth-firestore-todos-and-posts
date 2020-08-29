@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Post from "./post";
 import {
   deletePost,
@@ -9,10 +9,19 @@ import { Redirect } from "react-router-dom";
 import { Spinner, Modal, Button } from "react-bootstrap";
 const _ = require("lodash");
 
-class Posts extends Component {
-  _isMounted = false;
+const Posts = ({ user }) => {
+  const useIsMounted = () => {
+    const isMounted = useRef(false);
+    useEffect(() => {
+      isMounted.current = true;
+      return () => (isMounted.current = false);
+    }, []);
+    return isMounted;
+  };
 
-  state = {
+  const isMaunted = useIsMounted();
+
+  const [state, setState] = useState({
     posts: [],
     filterPosts: false,
     showEdit: false,
@@ -21,234 +30,214 @@ class Posts extends Component {
     search: "",
     changedTitle: "",
     changedDescription: "",
-  };
+    loading: false,
+  });
 
-  componentDidMount = () => {
-    this._isMounted = true;
-
-    if (this._isMounted) {
-      this.setState({ loading: true }, () => {
-        this.subscribeToPosts();
-      });
+  useEffect(() => {
+    if (isMaunted) {
+      setState({ ...state, loading: true });
     }
-  };
-
-  subscribeToPosts = () => {
-    this.unsubscribePosts();
 
     const callback = (posts) => {
-      this.setState({ posts, loading: false });
+      if (isMaunted) {
+        setState({ ...state, posts, loading: false });
+      }
     };
 
-    const unsubscribeToPosts = subscribeToPosts(callback);
-    this.setState({ unsubscribeToPosts });
-  };
+    const unsubsribe = subscribeToPosts(callback);
+    return () => {
+      if (_.isFunction(unsubsribe)) {
+        unsubsribe();
+      }
+    };
+  }, []);
 
-  unsubscribePosts = () => {
-    const { unsubscribeToPosts } = this.state;
-
-    if (_.isFunction(unsubscribeToPosts)) {
-      unsubscribeToPosts();
-    }
-  };
-
-  componentWillUnmount = () => {
-    this._isMounted = false;
-    this.unsubscribePosts();
-  };
-
-  removePost = (post) => {
+  const removePost = (post) => {
     deletePost(post);
   };
 
-  showEditModal = (post) => {
-    this.setState({
+  const showEditModal = (post) => {
+    setState({
+      ...state,
       showEdit: true,
       postToEdit: post,
     });
   };
 
-  hideEditModal = () => {
-    this.setState({
+  const hideEditModal = () => {
+    setState({
+      ...state,
       showEdit: false,
       postToEdit: null,
     });
   };
 
-  editPost = () => {
-    const { postToEdit, changedTitle, changedDescription } = this.state;
+  const editPost = () => {
+    const { postToEdit, changedTitle, changedDescription } = state;
 
     updatePost(postToEdit, changedTitle, changedDescription);
 
-    this.setState({
+    setState({
+      ...state,
       postToEdit: null,
       showEdit: false,
     });
   };
 
-  handleChange = (e) => {
-    this.setState({
+  const handleChange = (e) => {
+    setState({
+      ...state,
       [e.target.name]: e.target.value,
     });
   };
 
-  handleCheck = (e) => {
-    this.setState({
-      filterPosts: !this.state.filterPosts,
+  const handleCheck = (e) => {
+    setState({
+      ...state,
+      filterPosts: !state.filterPosts,
     });
   };
 
-  render() {
-    const {
-      posts,
-      search,
-      loading,
-      filterPosts,
-      showEdit,
-      changedTitle,
-      changedDescription,
-    } = this.state;
+  const seletedPosts = state.posts
+    ? state.posts.filter((post) => {
+        if (state.filterPosts) {
+          return post.user === user.uid;
+        } else {
+          return state.posts;
+        }
+      })
+    : [];
 
-    const { user } = this.props;
+  const filteredPosts = seletedPosts.filter((post) => {
+    const { search } = state;
 
-    if (!user) {
-      return <Redirect to="/signin" />;
+    if (!search) {
+      return seletedPosts;
+    } else {
+      return (
+        post.title.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
+        post.description.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
+        post.authorName.toLowerCase().indexOf(search.toLowerCase()) > -1
+      );
     }
+  });
 
-    const selectedPosts = posts.filter((post) => {
-      if (filterPosts) {
-        return post.user === user.uid;
-      } else {
-        return posts;
-      }
-    });
+  return (
+    <>
+      {!user ? <Redirect to="/signin" /> : null}
 
-    const filteredPosts = selectedPosts.filter((post) => {
-      if (!search) {
-        return [];
-      } else {
-        return (
-          post.title.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
-          post.description.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
-          post.authorName.toLowerCase().indexOf(search.toLowerCase()) > -1
-        );
-      }
-    });
-
-    return (
-      <React.Fragment>
-        <div className="posts">
-          <div className="container post-filters">
-            <input
-              type="search"
-              placeholder="Search Post by Title or Description..."
-              className="search-posts"
-              autoComplete="off"
-              value={search}
-              onChange={this.handleChange}
-              name="search"
-            />
-
-            <label className="filter-posts-label">My Posts</label>
-
-            <label>
-              <div className="toggle">
-                <input
-                  className="toggle-state"
-                  type="checkbox"
-                  onChange={this.handleCheck}
-                />
-                <div className="toggle-inner">
-                  <div className="indicator"></div>
-                </div>
-                <div className="active-bg"></div>
+      <div className="posts">
+        <div className="container post-filters">
+          <input
+            type="search"
+            placeholder="Search Post by Title or Description..."
+            className="search-posts"
+            autoComplete="off"
+            value={state.search}
+            onChange={handleChange}
+            name="search"
+          />
+          <label className="filter-posts-label">My Posts</label>
+          <label>
+            <div className="toggle">
+              <input
+                className="toggle-state"
+                type="checkbox"
+                onChange={handleCheck}
+              />
+              <div className="toggle-inner">
+                <div className="indicator"></div>
               </div>
-              <div className="label-text"></div>
-            </label>
-          </div>
-
-          {filteredPosts.length ? (
-            <div className="container posts-list">
-              {filteredPosts.map((post, i) => (
-                <div className="post-item" key={i}>
-                  <Post
-                    key={post.id}
-                    post={post}
-                    user={user}
-                    onRemove={this.removePost}
-                    onEdit={this.showEditModal}
-                  />
-                </div>
-              ))}
+              <div className="active-bg"></div>
             </div>
-          ) : (
-            <div className="empty-posts">
-              {loading ? (
-                <Spinner animation="border" variant="secondary" />
-              ) : (
-                <React.Fragment>
-                  {!search ? <h1>No Posts</h1> : <h1>No Search Result</h1>}
-                </React.Fragment>
-              )}
-            </div>
-          )}
+            <div className="label-text"></div>
+          </label>
         </div>
-        {showEdit ? (
-          <div className="modal-bg">
-            <Modal.Dialog className="edit-post-modal">
-              <Modal.Header>
-                <input
-                  type="text"
-                  className="edit-post-input"
-                  onChange={this.handleChange}
-                  value={changedTitle}
-                  name="changedTitle"
-                  placeholder="Title"
-                  autoComplete="off"
-                  autoFocus="on"
-                />
-              </Modal.Header>
 
-              <Modal.Body>
-                <input
-                  type="text"
-                  className="edit-post-input"
-                  onChange={this.handleChange}
-                  value={changedDescription}
-                  name="changedDescription"
-                  placeholder="Description"
-                  autoComplete="off"
+        {filteredPosts.length ? (
+          <div className="container posts-list">
+            {filteredPosts.map((post, i) => (
+              <div className="post-item" key={i}>
+                <Post
+                  key={post.id}
+                  post={post}
+                  user={user}
+                  onRemove={removePost}
+                  onEdit={showEditModal}
                 />
-              </Modal.Body>
-
-              <Modal.Footer>
-                <Button
-                  className="close-edit-post-modal-btn"
-                  variant="secondary"
-                  onClick={this.hideEditModal}
-                >
-                  Close
-                </Button>
-                <Button
-                  variant="primary"
-                  className={this.disableBtn(changedTitle, changedDescription)}
-                  onClick={this.editPost}
-                >
-                  Save changes
-                </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
+              </div>
+            ))}
           </div>
-        ) : null}
-      </React.Fragment>
-    );
-  }
+        ) : (
+          <div className="empty-posts">
+            {state.loading ? (
+              <Spinner animation="border" variant="secondary" />
+            ) : (
+              <React.Fragment>
+                {!state.search ? <h1>No Posts</h1> : <h1>No Search Result</h1>}
+              </React.Fragment>
+            )}
+          </div>
+        )}
+      </div>
+      {state.showEdit ? (
+        <div className="modal-bg">
+          <Modal.Dialog className="edit-post-modal">
+            <Modal.Header>
+              <input
+                type="text"
+                className="edit-post-input"
+                onChange={handleChange}
+                value={state.changedTitle}
+                name="changedTitle"
+                placeholder="Title"
+                autoComplete="off"
+                autoFocus="on"
+              />
+            </Modal.Header>
 
-  disableBtn(changedTitle, changedDescription) {
-    let classes = "";
-    classes += changedTitle && changedDescription ? "" : " -disabled";
-    return classes;
-  }
-}
+            <Modal.Body>
+              <input
+                type="text"
+                className="edit-post-input"
+                onChange={handleChange}
+                value={state.changedDescription}
+                name="changedDescription"
+                placeholder="Description"
+                autoComplete="off"
+              />
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button
+                className="close-edit-post-modal-btn"
+                variant="secondary"
+                onClick={hideEditModal}
+              >
+                Close
+              </Button>
+              <Button
+                variant="primary"
+                className={disableBtn(
+                  state.changedTitle,
+                  state.changedDescription
+                )}
+                onClick={editPost}
+              >
+                Save changes
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </div>
+      ) : null}
+    </>
+  );
+};
+
+const disableBtn = (changedTitle, changedDescription) => {
+  let classes = "";
+  classes += changedTitle && changedDescription ? "" : " -disabled";
+  return classes;
+};
 
 export default Posts;

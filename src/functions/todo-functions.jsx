@@ -1,5 +1,6 @@
 import firebase from "../config/firebase";
 const db = firebase.firestore();
+const _ = require("lodash");
 
 const createTodo = (title, user) => {
   return db.collection("todos").add({
@@ -10,25 +11,31 @@ const createTodo = (title, user) => {
   });
 };
 
-const fetchTodos = (user) => {
-  return db
+const subscribeToTodos = (callback, userId) => {
+  const unsubscribe = db
     .collection("todos")
-    .where("user", "==", user.uid)
+    .where("user", "==", userId)
     .orderBy("createdAt", "desc")
-    .get()
-    .then((res) =>
-      res.docs.map((doc) => {
+    .onSnapshot((snap) => {
+      const todos = [];
+
+      snap.docs.forEach((doc) => {
         const { title, done, createdAt, user } = doc.data();
 
-        return {
+        todos.push({
           id: doc.id,
           title,
           done,
           createdAt,
           user,
-        };
-      })
-    );
+        });
+      });
+
+      if (_.isFunction(callback)) {
+        callback(todos);
+      }
+    });
+  return unsubscribe;
 };
 
 const deleteTodo = (todo) => {
@@ -63,7 +70,7 @@ const completeAllTodos = (activeTodos) => {
 
 export {
   createTodo,
-  fetchTodos,
+  subscribeToTodos,
   deleteTodo,
   toggleCheck,
   removeAllCompleted,

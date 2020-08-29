@@ -4,19 +4,19 @@ import Messages from "./messages";
 import Users from "./users";
 
 const Chat = ({ user }) => {
-  if (!user) {
-    return <Redirect to="signin" />;
-  }
-
   return (
-    <div className="chat-container">
-      <div className="container">
-        <Messages user={user} />
+    <>
+      {!user ? <Redirect to="signin" /> : null}
+
+      <div className="chat-container">
+        <div className="container">
+          <Messages user={user} />
+        </div>
+        <div className="users-container">
+          <Users user={user} />
+        </div>
       </div>
-      <div className="users-container">
-        <Users user={user} />
-      </div>
-    </div>
+    </>
   );
 };
 

@@ -2,7 +2,7 @@ import React from "react";
 
 const TodoItem = ({ onRemove, todo, toggleDone }) => {
   return (
-    <React.Fragment>
+    <>
       <div className="todo-toggle" onClick={() => toggleDone(todo)}>
         {todo.done ? <span>✓</span> : null}
       </div>
@@ -10,7 +10,7 @@ const TodoItem = ({ onRemove, todo, toggleDone }) => {
       <div className="remove-todo" onClick={() => onRemove(todo)}>
         ✗
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

@@ -8,7 +8,7 @@ const FilterButtons = ({
   setFilter,
 }) => {
   return (
-    <React.Fragment>
+    <>
       <div className="todos-count">{activeTodos.length} items left</div>
       <div className={activeAll(filterParam)} onClick={() => setFilter("all")}>
         All
@@ -30,7 +30,7 @@ const FilterButtons = ({
           Remove completed
         </div>
       ) : null}
-    </React.Fragment>
+    </>
   );
 };
 

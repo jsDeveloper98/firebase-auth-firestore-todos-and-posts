@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import "../styles/App.scss";
 import firebase from "../config/firebase";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import NavBar from "./main/Navbar";
-import SignIn from "./auth/Sign-in";
-import SignUp from "./auth/Sign-up";
-import Home from "./main/Home";
+import NavBar from "./main/navbar";
+import SignIn from "./auth/sign-in";
+import SignUp from "./auth/sign-up";
+import Home from "./main/home";
 import CreatePost from "./post/create-post";
 import Posts from "./post/posts";
 import PostDetails from "./post/post-details";
@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     authListener();
-  }, [user]);
+  }, []);
 
   const authListener = () => {
     firebase.auth().onAuthStateChanged((user) => {
