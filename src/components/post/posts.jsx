@@ -26,7 +26,6 @@ const Posts = ({ user }) => {
     filterPosts: false,
     showEdit: false,
     postToEdit: null,
-    unsubscribeToPosts: null,
     search: "",
     changedTitle: "",
     changedDescription: "",
@@ -34,13 +33,11 @@ const Posts = ({ user }) => {
   });
 
   useEffect(() => {
-    if (isMaunted) {
-      setState({ ...state, loading: true });
-    }
+    setState((state) => ({ ...state, loading: true }));
 
     const callback = (posts) => {
       if (isMaunted) {
-        setState({ ...state, posts, loading: false });
+        setState((state) => ({ ...state, posts, loading: false }));
       }
     };
 
