@@ -1,60 +1,50 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { subscribeToUsers } from "../../functions/user-functions";
 import User from "./user";
 const _ = require("lodash");
 
-class Users extends Component {
-  _isMounted = false;
+const Users = () => {
+  const useIsMounted = () => {
+    const isMounted = useRef(false);
+    useEffect(() => {
+      isMounted.current = true;
+      return () => (isMounted.current = false);
+    }, []);
+    return isMounted;
+  };
 
-  state = {
+  const isMaunted = useIsMounted();
+
+  const [state, setState] = useState({
     users: [],
-    unsubscribeToUsers: null,
-  };
+  });
 
-  componentDidMount = () => {
-    this._isMounted = true;
-
-    if (this._isMounted) {
-      this.subscribeToUsers();
-    }
-  };
-
-  subscribeToUsers = () => {
-    if (_.isFunction(this.unsubscribeToUsers)) {
-      this.unsubscribeToUsers();
-    }
-
+  useEffect(() => {
     const callback = (users) => {
-      this.setState({ users });
+      if (isMaunted) {
+        setState((state) => ({ ...state, users }));
+      }
     };
 
     const unsubscribeToUsers = subscribeToUsers(callback);
-    this.setState({ unsubscribeToUsers });
-  };
+    return () => {
+      if (_.isFunction(unsubscribeToUsers)) {
+        unsubscribeToUsers();
+      }
+    };
+  }, [isMaunted]);
 
-  componentWillUnmount = () => {
-    this._isMounted = false;
-
-    const { unsubscribeToUsers } = this.state;
-
-    if (_.isFunction(unsubscribeToUsers)) {
-      unsubscribeToUsers();
-    }
-  };
-
-  render() {
-    const { users } = this.state;
-
-    return (
+  return (
+    <>
       <div className="users-list">
-        {users.map((user, i) => (
+        {state.users.map((user, i) => (
           <div className="user" key={i}>
             <User key={user.id} user={user} />
           </div>
         ))}
       </div>
-    );
-  }
-}
+    </>
+  );
+};
 
 export default Users;

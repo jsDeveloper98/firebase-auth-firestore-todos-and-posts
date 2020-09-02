@@ -42,22 +42,22 @@ const Messages = ({ user }) => {
 
     setState((state) => ({ ...state, loading: true }));
 
-    const callback = (messages) => {
+    const messagesCallback = (messages) => {
       if (isMaunted) {
         setState((state) => ({ ...state, messages, loading: false }));
       }
     };
 
-    const callback2 = (removedMessageIds) => {
+    const removedMessagesCallback = (removedMessageIds) => {
       if (isMaunted) {
         setState((state) => ({ ...state, removedMessageIds }));
       }
     };
 
-    const unsubscribeToMessages = subscribeToMessages(callback);
+    const unsubscribeToMessages = subscribeToMessages(messagesCallback);
     const unsubscribeToRemovedMessages = subscribeToRemovedMessages(
       user,
-      callback2
+      removedMessagesCallback
     );
 
     return () => {
