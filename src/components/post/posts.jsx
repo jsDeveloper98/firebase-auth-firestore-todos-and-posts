@@ -47,8 +47,7 @@ const Posts = ({ user }) => {
         unsubsribe();
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isMaunted]);
 
   const removePost = (post) => {
     deletePost(post);

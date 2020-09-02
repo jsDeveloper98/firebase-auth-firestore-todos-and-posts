@@ -6,7 +6,7 @@ const NavBar = ({ logOut, user }) => {
   return (
     <>
       {user ? (
-        <React.Fragment>
+        <>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
@@ -32,7 +32,7 @@ const NavBar = ({ logOut, user }) => {
           <Button className="logout-btn" variant="dark" onClick={logOut}>
             Log Out
           </Button>
-        </React.Fragment>
+        </>
       ) : (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
