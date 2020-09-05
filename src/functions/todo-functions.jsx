@@ -1,6 +1,5 @@
 import firebase from "../config/firebase";
 const db = firebase.firestore();
-const _ = require("lodash");
 
 export const createTodo = (title, user) => {
   return db.collection("todos").add({
