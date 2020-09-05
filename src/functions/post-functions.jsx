@@ -13,7 +13,7 @@ export const createPost = ({ title, description, user }) => {
         description,
         user,
         authorName: username[0],
-        createdAt: Date.now(),
+        createdAt: new Date(),
       });
     });
 };
