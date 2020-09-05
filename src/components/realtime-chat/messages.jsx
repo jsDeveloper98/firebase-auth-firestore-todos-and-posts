@@ -1,34 +1,31 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   createMessage,
   deleteMessage,
-  subscribeToMessages,
   addDeletedMessageForCurrentUser,
-  subscribeToRemovedMessages,
   removeDeletedMessages,
   updateMessage,
 } from "../../functions/message-functions";
 import Message from "./message";
 import { Modal, Button, Spinner } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  subscribeToMessages,
+  subscribeToRemovedMessages,
+} from "../../redux/actions/message-actions";
 const _ = require("lodash");
 
 const Messages = ({ user }) => {
-  const useIsMounted = () => {
-    const isMounted = useRef(false);
-    useEffect(() => {
-      isMounted.current = true;
-      return () => (isMounted.current = false);
-    }, []);
-    return isMounted;
-  };
-
-  const isMaunted = useIsMounted();
+  const dispatch = useDispatch();
+  const messages = useSelector((state) => state.messages.messages);
+  const removedMessageIds = useSelector(
+    (state) => state.messages.removedMessageIds
+  );
+  const loading = useSelector((state) => state.app.loading);
 
   const [state, setState] = useState({
     value: "",
     changedTitle: "",
-    messages: [],
-    removedMessageIds: [],
     showRemoveModal: false,
     showEditModal: false,
     messageToRemove: null,
@@ -40,25 +37,18 @@ const Messages = ({ user }) => {
       return;
     }
 
-    setState((state) => ({ ...state, loading: true }));
+    let unsubscribeToMessages, unsubscribeToRemovedMessages;
 
-    const messagesCallback = (messages) => {
-      if (isMaunted) {
-        setState((state) => ({ ...state, messages, loading: false }));
-      }
+    const messagesCallback = (u) => {
+      unsubscribeToMessages = u;
     };
 
-    const removedMessagesCallback = (removedMessageIds) => {
-      if (isMaunted) {
-        setState((state) => ({ ...state, removedMessageIds }));
-      }
+    const removedMessagesCallback = (u) => {
+      unsubscribeToRemovedMessages = u;
     };
 
-    const unsubscribeToMessages = subscribeToMessages(messagesCallback);
-    const unsubscribeToRemovedMessages = subscribeToRemovedMessages(
-      user,
-      removedMessagesCallback
-    );
+    dispatch(subscribeToMessages(messagesCallback));
+    dispatch(subscribeToRemovedMessages(user, removedMessagesCallback));
 
     return () => {
       [unsubscribeToMessages, unsubscribeToRemovedMessages].forEach((u) => {
@@ -67,7 +57,7 @@ const Messages = ({ user }) => {
         }
       });
     };
-  }, [user, isMaunted]);
+  }, [user, dispatch]);
 
   const handleChange = (e) => {
     setState({
@@ -160,11 +150,11 @@ const Messages = ({ user }) => {
     });
   };
 
-  const filteredMessages = state.messages.filter((message) => {
-    if (state.removedMessageIds) {
-      return !state.removedMessageIds.includes(message.id);
+  const filteredMessages = messages.filter((message) => {
+    if (removedMessageIds) {
+      return !removedMessageIds.includes(message.id);
     } else {
-      return state.messages;
+      return messages;
     }
   });
 
@@ -189,7 +179,7 @@ const Messages = ({ user }) => {
             </>
           ) : (
             <div className="empty-messages">
-              {state.loading ? (
+              {loading ? (
                 <Spinner animation="border" variant="secondary" />
               ) : (
                 <h1>No Messages</h1>

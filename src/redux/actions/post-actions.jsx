@@ -1,5 +1,6 @@
-import { FETCH_POSTS, SHOW_LOADING, HIDE_LOADING } from "./types";
-import firebase from "../config/firebase";
+import firebase from "../../config/firebase";
+import { FETCH_POSTS } from "../types";
+import { showLoading, hideLoading } from "./main-actions";
 const db = firebase.firestore();
 const _ = require("lodash");
 
@@ -10,10 +11,11 @@ export const subscribeToPosts = (callback) => {
       .collection("posts")
       .orderBy("createdAt", "desc")
       .onSnapshot((snap) => {
+        const posts = [];
+
         if (_.isFunction(callback)) {
           callback(unsubscribe);
         }
-        const posts = [];
 
         snap.docs.forEach((doc) => {
           const {
@@ -38,19 +40,8 @@ export const subscribeToPosts = (callback) => {
           type: FETCH_POSTS,
           payload: posts,
         });
+
         dispatch(hideLoading());
       });
-  };
-};
-
-export const showLoading = () => {
-  return {
-    type: SHOW_LOADING,
-  };
-};
-
-export const hideLoading = () => {
-  return {
-    type: HIDE_LOADING,
   };
 };

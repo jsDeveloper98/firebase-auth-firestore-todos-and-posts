@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import EditModal from "../../reusable-components/edit-modal";
 import PostsInfo from "./posts-info";
 import { useDispatch, useSelector } from "react-redux";
-import { subscribeToPosts } from "../../redux/actions";
+import { subscribeToPosts } from "../../redux/actions/post-actions";
 const _ = require("lodash");
 
 const Posts = ({ user }) => {
