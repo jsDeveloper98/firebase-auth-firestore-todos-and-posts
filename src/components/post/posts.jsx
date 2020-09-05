@@ -3,12 +3,14 @@ import { deletePost, updatePost } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
 import EditModal from "../../reusable-components/edit-modal";
 import PostsInfo from "./posts-info";
-import { connect, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { subscribeToPosts } from "../../redux/actions";
 const _ = require("lodash");
 
-const Posts = ({ user, posts }) => {
+const Posts = ({ user }) => {
   const dispatch = useDispatch();
+  const loading = useSelector((state) => state.app.loading);
+  const posts = useSelector((state) => state.posts.posts);
 
   const [state, setState] = useState({
     filterPosts: false,
@@ -116,7 +118,7 @@ const Posts = ({ user, posts }) => {
         value={state.search}
         posts={filteredPosts}
         user={user}
-        isLoading={state.loading}
+        loading={loading}
       />
 
       {state.showEdit ? (
@@ -133,10 +135,4 @@ const Posts = ({ user, posts }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    posts: state.posts.posts,
-  };
-};
-
-export default connect(mapStateToProps)(Posts);
+export default Posts;

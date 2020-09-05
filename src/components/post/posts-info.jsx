@@ -8,7 +8,7 @@ const PostsInfo = ({
   onCheck,
   posts,
   user,
-  isLoading,
+  loading,
   onRemove,
   onShow,
 }) => {
@@ -57,7 +57,7 @@ const PostsInfo = ({
         </div>
       ) : (
         <div className="empty-posts">
-          {isLoading ? (
+          {loading ? (
             <Spinner animation="border" variant="secondary" />
           ) : (
             <>{!value ? <h1>No Posts</h1> : <h1>No Search Result</h1>}</>
