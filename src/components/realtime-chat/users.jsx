@@ -1,43 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
-import { subscribeToUsers } from "../../functions/user-functions";
+import React, { useEffect } from "react";
 import User from "./user";
+import { useDispatch, useSelector } from "react-redux";
+import { subscribeToUsers } from "../../redux/actions/user-actions";
 const _ = require("lodash");
 
 const Users = () => {
-  const useIsMounted = () => {
-    const isMounted = useRef(false);
-    useEffect(() => {
-      isMounted.current = true;
-      return () => (isMounted.current = false);
-    }, []);
-    return isMounted;
-  };
-
-  const isMaunted = useIsMounted();
-
-  const [state, setState] = useState({
-    users: [],
-  });
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.users.users);
 
   useEffect(() => {
-    const callback = (users) => {
-      if (isMaunted) {
-        setState((state) => ({ ...state, users }));
-      }
+    let unsubscribe;
+
+    const callback = (u) => {
+      unsubscribe = u;
     };
 
-    const unsubscribeToUsers = subscribeToUsers(callback);
+    dispatch(subscribeToUsers(callback));
     return () => {
-      if (_.isFunction(unsubscribeToUsers)) {
-        unsubscribeToUsers();
+      if (_.isFunction(unsubscribe)) {
+        unsubscribe();
       }
     };
-  }, [isMaunted]);
+  }, [dispatch]);
 
   return (
     <>
       <div className="users-list">
-        {state.users.map((user, i) => (
+        {users.map((user, i) => (
           <div className="user" key={i}>
             <User key={user.id} user={user} />
           </div>

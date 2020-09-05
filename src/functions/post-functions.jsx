@@ -1,8 +1,7 @@
 import firebase from "../config/firebase";
 const db = firebase.firestore();
-const _ = require("lodash");
 
-const createPost = ({ title, description, user }) => {
+export const createPost = ({ title, description, user }) => {
   return db
     .collection("users")
     .where("uid", "==", user)
@@ -19,11 +18,11 @@ const createPost = ({ title, description, user }) => {
     });
 };
 
-const deletePost = (post) => {
+export const deletePost = (post) => {
   return db.collection("posts").doc(post.id).delete();
 };
 
-const updatePost = (post, title, description) => {
+export const updatePost = (post, title, description) => {
   return db.collection("posts").doc(post.id).set(
     {
       title,
@@ -32,32 +31,3 @@ const updatePost = (post, title, description) => {
     { merge: true }
   );
 };
-
-const subscribeToPosts = (callback = null) => {
-  const unsubscribe = db
-    .collection("posts")
-    .orderBy("createdAt", "desc")
-    .onSnapshot((snap) => {
-      const posts = [];
-
-      snap.docs.forEach((doc) => {
-        const { title, description, createdAt, user, authorName } = doc.data();
-
-        posts.push({
-          id: doc.id,
-          title,
-          description,
-          createdAt,
-          user,
-          authorName,
-        });
-      });
-
-      if (_.isFunction(callback)) {
-        callback(posts);
-      }
-    });
-  return unsubscribe;
-};
-
-export { createPost, deletePost, updatePost, subscribeToPosts };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import TodoList from "./todo-list";
 import FilterButtons from "./filter-buttons";
 import { Redirect } from "react-router-dom";
@@ -9,24 +9,17 @@ import {
   toggleCheck,
   removeAllCompleted,
   completeAllTodos,
-  subscribeToTodos,
 } from "../../functions/todo-functions";
+import { useDispatch, useSelector } from "react-redux";
+import { subscribeToTodos } from "../../redux/actions/todo-actions";
 const _ = require("lodash");
 
 const Todo = ({ user }) => {
-  const useIsMounted = () => {
-    const isMounted = useRef(false);
-    useEffect(() => {
-      isMounted.current = true;
-      return () => (isMounted.current = false);
-    }, []);
-    return isMounted;
-  };
-
-  const isMaunted = useIsMounted();
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todos.todos);
+  const loading = useSelector((state) => state.app.loading);
 
   const [state, setState] = useState({
-    todos: [],
     title: "",
     filterParam: "all",
   });
@@ -36,21 +29,19 @@ const Todo = ({ user }) => {
       return;
     }
 
-    setState((state) => ({ ...state, loading: true }));
+    let unsubscribe;
 
-    const callback = (todos) => {
-      if (isMaunted) {
-        setState((state) => ({ ...state, todos, loading: false }));
-      }
+    const callback = (u) => {
+      unsubscribe = u;
     };
 
-    const unsubscribe = subscribeToTodos(callback, user.uid);
+    dispatch(subscribeToTodos(callback, user.uid));
     return () => {
       if (_.isFunction(unsubscribe)) {
         unsubscribe();
       }
     };
-  }, [isMaunted, user]);
+  }, [dispatch, user]);
 
   const handleChange = (e) => {
     setState({
@@ -81,7 +72,7 @@ const Todo = ({ user }) => {
   };
 
   const removeCompletedTodos = () => {
-    const completedTodos = state.todos.filter((todo) => todo.done);
+    const completedTodos = todos.filter((todo) => todo.done);
 
     removeAllCompleted(completedTodos);
   };
@@ -91,23 +82,23 @@ const Todo = ({ user }) => {
   };
 
   const doneAllTodos = () => {
-    const activeTodos = state.todos.filter((todo) => !todo.done);
+    const activeTodos = todos.filter((todo) => !todo.done);
 
     completeAllTodos(activeTodos);
   };
 
-  const filteredTodos = state.todos.filter((todo) => {
+  const filteredTodos = todos.filter((todo) => {
     if (state.filterParam === "active") {
       return !todo.done;
     } else if (state.filterParam === "completed") {
       return todo.done;
     }
-    return state.todos;
+    return todos;
   });
 
-  const completedTodos = state.todos.filter((todo) => todo.done);
+  const completedTodos = todos.filter((todo) => todo.done);
 
-  const activeTodos = state.todos.filter((todo) => !todo.done);
+  const activeTodos = todos.filter((todo) => !todo.done);
 
   return (
     <>
@@ -130,7 +121,7 @@ const Todo = ({ user }) => {
         </div>
 
         <div className="todo-list">
-          {state.loading ? (
+          {loading ? (
             <Spinner
               className="loading-todos"
               animation="border"
@@ -145,7 +136,7 @@ const Todo = ({ user }) => {
           )}
         </div>
 
-        {state.todos.length ? (
+        {todos.length ? (
           <div className="filter-buttons">
             <FilterButtons
               filterParam={state.filterParam}

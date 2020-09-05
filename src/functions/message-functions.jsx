@@ -1,8 +1,7 @@
 import firebase from "../config/firebase";
 const db = firebase.firestore();
-const _ = require("lodash");
 
-const createMessage = (value, user) => {
+export const createMessage = (value, user) => {
   return db
     .collection("users")
     .where("uid", "==", user.uid)
@@ -18,37 +17,11 @@ const createMessage = (value, user) => {
     });
 };
 
-const subscribeToMessages = (callback = null) => {
-  const unsubscribe = db
-    .collection("messages")
-    .orderBy("createdAt", "asc")
-    .onSnapshot((snap) => {
-      const messages = [];
-
-      snap.docs.forEach((doc) => {
-        const { title, createdAt, user, authorName } = doc.data();
-
-        messages.push({
-          id: doc.id,
-          title,
-          createdAt,
-          user,
-          authorName,
-        });
-      });
-
-      if (_.isFunction(callback)) {
-        callback(messages);
-      }
-    });
-  return unsubscribe;
-};
-
-const deleteMessage = (message) => {
+export const deleteMessage = (message) => {
   return db.collection("messages").doc(message.id).delete();
 };
 
-const addDeletedMessageForCurrentUser = (user, message) => {
+export const addDeletedMessageForCurrentUser = (user, message) => {
   return db
     .collection("users")
     .where("uid", "==", user.uid)
@@ -66,23 +39,7 @@ const addDeletedMessageForCurrentUser = (user, message) => {
     });
 };
 
-const subscribeToRemovedMessages = (user, callback = null) => {
-  const unsubscribe = db
-    .collection("users")
-    .where("uid", "==", user.uid)
-    .onSnapshot((snap) =>
-      snap.docs.forEach((doc) => {
-        const { removedMessageIds } = doc.data();
-
-        if (_.isFunction(callback)) {
-          callback(removedMessageIds);
-        }
-      })
-    );
-  return unsubscribe;
-};
-
-const removeDeletedMessages = (message) => {
+export const removeDeletedMessages = (message) => {
   return db
     .collection("users")
     .get()
@@ -101,21 +58,11 @@ const removeDeletedMessages = (message) => {
     );
 };
 
-const updateMessage = (message, title) => {
+export const updateMessage = (message, title) => {
   return db.collection("messages").doc(message.id).set(
     {
       title,
     },
     { merge: true }
   );
-};
-
-export {
-  createMessage,
-  subscribeToMessages,
-  deleteMessage,
-  addDeletedMessageForCurrentUser,
-  subscribeToRemovedMessages,
-  removeDeletedMessages,
-  updateMessage,
 };

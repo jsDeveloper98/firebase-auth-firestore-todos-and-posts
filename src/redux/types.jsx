@@ -5,3 +5,7 @@ export const FETCH_REMOVED_MESSAGE_IDS = "FETCH_REMOVED_MESSAGE_IDS";
 
 export const SHOW_LOADING = "SHOW_LOADING";
 export const HIDE_LOADING = "HIDE_LOADING";
+
+export const FETCH_USERS = "FETCH_USERS";
+
+export const FETCH_TODOS = "FETCH_TODOS";
