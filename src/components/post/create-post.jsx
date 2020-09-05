@@ -20,9 +20,17 @@ const CreatePost = ({ user }) => {
     e.preventDefault();
     const { title, description } = state;
 
-    if (title && description) {
-      createPost(title, description, user);
+    if (!title.trim() || !description.trim()) {
+      return;
     }
+
+    const newPost = {
+      title,
+      description,
+      user: user.uid,
+    };
+
+    createPost(newPost);
 
     setState({
       title: "",

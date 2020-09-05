@@ -2,19 +2,19 @@ import firebase from "../config/firebase";
 const db = firebase.firestore();
 const _ = require("lodash");
 
-const createPost = (title, description, user) => {
+const createPost = ({ title, description, user }) => {
   return db
     .collection("users")
-    .where("uid", "==", user.uid)
+    .where("uid", "==", user)
     .get()
     .then((res) => res.docs.map((doc) => doc.data().username))
     .then((username) => {
       return db.collection("posts").add({
         title,
         description,
-        createdAt: new Date(),
-        user: user.uid,
+        user,
         authorName: username[0],
+        createdAt: Date.now(),
       });
     });
 };

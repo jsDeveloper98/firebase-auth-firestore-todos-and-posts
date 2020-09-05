@@ -2,11 +2,11 @@ import firebase from "../config/firebase";
 const db = firebase.firestore();
 const _ = require("lodash");
 
-const createUser = (user, username) => {
+const createUser = ({ user }, username) => {
   return db.collection("users").add({
-    uid: user.user.uid,
+    uid: user.uid,
     username,
-    email: user.user.email,
+    email: user.email,
     createdAt: new Date(),
   });
 };

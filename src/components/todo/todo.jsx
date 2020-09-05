@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import TodoList from "./todo-list";
 import FilterButtons from "./filter-buttons";
 import { Redirect } from "react-router-dom";
@@ -13,133 +13,124 @@ import {
 } from "../../functions/todo-functions";
 const _ = require("lodash");
 
-class Todo extends Component {
-  _isMounted = false;
+const Todo = ({ user }) => {
+  const useIsMounted = () => {
+    const isMounted = useRef(false);
+    useEffect(() => {
+      isMounted.current = true;
+      return () => (isMounted.current = false);
+    }, []);
+    return isMounted;
+  };
 
-  state = {
+  const isMaunted = useIsMounted();
+
+  const [state, setState] = useState({
     todos: [],
     title: "",
     filterParam: "all",
-    unsubscribeToTodos: null,
-  };
+  });
 
-  componentDidMount = () => {
-    this._isMounted = true;
-    const { user } = this.props;
-
-    this.setState({ loading: true }, () => {
-      if (!_.isEmpty(user)) {
-        const unsubscribeToTodos = this.subscribeToTodos(user);
-
-        this.setState({ unsubscribeToTodos });
-      }
-    });
-  };
-
-  subscribeToTodos = (user) => {
-    if (_.isFunction(this.unsubscribeToTodos)) {
-      this.unsubscribeToTodos();
+  useEffect(() => {
+    if (_.isEmpty(user)) {
+      return;
     }
 
+    setState((state) => ({ ...state, loading: true }));
+
     const callback = (todos) => {
-      this.setState({ todos, loading: false });
+      if (isMaunted) {
+        setState((state) => ({ ...state, todos, loading: false }));
+      }
     };
 
-    const unsubscribeToTodos = subscribeToTodos(callback, user.uid);
-    this.setState({ unsubscribeToTodos });
-  };
+    const unsubscribe = subscribeToTodos(callback, user.uid);
+    return () => {
+      if (_.isFunction(unsubscribe)) {
+        unsubscribe();
+      }
+    };
+  }, [isMaunted, user]);
 
-  handleChange = (e) => {
-    this.setState({
+  const handleChange = (e) => {
+    setState({
+      ...state,
       [e.target.name]: e.target.value,
     });
   };
 
-  handleKeyDown = (e) => {
-    const { title } = this.state;
+  const handleKeyDown = (e) => {
+    const { title } = state;
 
     if (e.key === "Enter" && title) {
-      createTodo(title, this.props.user);
+      createTodo(title, user);
 
-      this.setState({
+      setState({
+        ...state,
         title: "",
       });
     }
   };
 
-  componentWillUnmount = () => {
-    this._isMounted = false;
-    const { unsubscribeToTodos } = this.state;
-
-    if (_.isFunction(unsubscribeToTodos)) {
-      unsubscribeToTodos();
-    }
-  };
-
-  removeTodo = (todo) => {
+  const removeTodo = (todo) => {
     deleteTodo(todo);
   };
 
-  handleClick = (param) => {
-    this.setState({ filterParam: param });
+  const handleClick = (param) => {
+    setState({ ...state, filterParam: param });
   };
 
-  removeCompletedTodos = () => {
-    const completedTodos = this.state.todos.filter((todo) => todo.done);
+  const removeCompletedTodos = () => {
+    const completedTodos = state.todos.filter((todo) => todo.done);
 
     removeAllCompleted(completedTodos);
   };
 
-  toggleDone = (todo) => {
+  const toggleDone = (todo) => {
     toggleCheck(todo);
   };
 
-  doneAllTodos = () => {
-    const activeTodos = this.state.todos.filter((todo) => !todo.done);
+  const doneAllTodos = () => {
+    const activeTodos = state.todos.filter((todo) => !todo.done);
 
     completeAllTodos(activeTodos);
   };
 
-  render() {
-    const { todos, title, loading, filterParam } = this.state;
-
-    if (!this.props.user) {
-      return <Redirect to="/signin" />;
+  const filteredTodos = state.todos.filter((todo) => {
+    if (state.filterParam === "active") {
+      return !todo.done;
+    } else if (state.filterParam === "completed") {
+      return todo.done;
     }
+    return state.todos;
+  });
 
-    const filteredTodos = todos.filter((todo) => {
-      if (filterParam === "active") {
-        return !todo.done;
-      } else if (filterParam === "completed") {
-        return todo.done;
-      }
-      return todos;
-    });
+  const completedTodos = state.todos.filter((todo) => todo.done);
 
-    const completedTodos = todos.filter((todo) => todo.done);
+  const activeTodos = state.todos.filter((todo) => !todo.done);
 
-    const activeTodos = todos.filter((todo) => !todo.done);
+  return (
+    <>
+      {!user ? <Redirect to="/signin" /> : null}
 
-    return (
       <div className="todo-container">
         <div className="todo-header">todos</div>
 
         <div className="input-container">
-          <i className="arrow down" onClick={this.doneAllTodos}></i>
-
+          <i className="arrow down" onClick={doneAllTodos}></i>
           <input
             type="text"
             name="title"
-            onChange={this.handleChange}
-            value={title}
+            onChange={handleChange}
+            value={state.title}
             placeholder="What needs to be done?"
-            onKeyDown={this.handleKeyDown}
+            onKeyDown={handleKeyDown}
             autoComplete="off"
           />
         </div>
 
         <div className="todo-list">
-          {loading ? (
+          {state.loading ? (
             <Spinner
               className="loading-todos"
               animation="border"
@@ -148,26 +139,26 @@ class Todo extends Component {
           ) : (
             <TodoList
               todos={filteredTodos}
-              onRemove={this.removeTodo}
-              toggleDone={this.toggleDone}
+              onRemove={removeTodo}
+              toggleDone={toggleDone}
             />
           )}
         </div>
 
-        {todos.length ? (
+        {state.todos.length ? (
           <div className="filter-buttons">
             <FilterButtons
-              filterParam={filterParam}
-              setFilter={this.handleClick}
+              filterParam={state.filterParam}
+              setFilter={handleClick}
               activeTodos={activeTodos}
               completedTodos={completedTodos}
-              removeCompletedTodos={this.removeCompletedTodos}
+              removeCompletedTodos={removeCompletedTodos}
             />
           </div>
         ) : null}
       </div>
-    );
-  }
-}
+    </>
+  );
+};
 
 export default Todo;

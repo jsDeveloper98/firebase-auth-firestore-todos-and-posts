@@ -1,14 +1,21 @@
 import React from "react";
 import BootstrapJumbotron from "../../reusable-components/bootstrap-jumbotreon";
+import { connect } from "react-redux";
 
-const PostDetails = ({ location }) => {
-  const { selectedPost } = location.state;
-
+const PostDetails = ({ post }) => {
   return (
     <div className="post-item-details">
-      <BootstrapJumbotron post={selectedPost} detailedView={true} />
+      <BootstrapJumbotron post={post} detailedView={true} />
     </div>
   );
 };
 
-export default PostDetails;
+const mapStateToProps = (state, { match }) => {
+  const { id } = match.params;
+
+  return {
+    post: state.posts.posts.find((post) => post.id === id),
+  };
+};
+
+export default connect(mapStateToProps)(PostDetails);

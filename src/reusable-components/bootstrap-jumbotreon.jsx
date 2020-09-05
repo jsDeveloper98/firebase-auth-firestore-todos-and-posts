@@ -22,19 +22,12 @@ const BootstrapJumbotron = ({
           </Button>
         </Link>
       ) : (
-        <Link
-          to={{
-            pathname: "/post/" + post.id,
-            state: {
-              selectedPost: post,
-            },
-          }}
-        >
+        <Link to={"/post/" + post.id}>
           <Button variant="secondary">Open Post</Button>
         </Link>
       )}
       {onEdit ? (
-        <React.Fragment>
+        <>
           {post.user !== user.uid ? (
             <div className="author">Created by {post.authorName}</div>
           ) : (
@@ -54,7 +47,7 @@ const BootstrapJumbotron = ({
               </div>
             </div>
           ) : null}
-        </React.Fragment>
+        </>
       ) : null}
     </Jumbotron>
   );

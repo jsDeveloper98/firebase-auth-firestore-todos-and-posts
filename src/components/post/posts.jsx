@@ -1,53 +1,38 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  deletePost,
-  updatePost,
-  subscribeToPosts,
-} from "../../functions/post-functions";
+import React, { useState, useEffect } from "react";
+import { deletePost, updatePost } from "../../functions/post-functions";
 import { Redirect } from "react-router-dom";
 import EditModal from "../../reusable-components/edit-modal";
 import PostsInfo from "./posts-info";
+import { connect, useDispatch } from "react-redux";
+import { subscribeToPosts } from "../../redux/actions";
 const _ = require("lodash");
 
-const Posts = ({ user }) => {
-  const useIsMounted = () => {
-    const isMounted = useRef(false);
-    useEffect(() => {
-      isMounted.current = true;
-      return () => (isMounted.current = false);
-    }, []);
-    return isMounted;
-  };
-
-  const isMaunted = useIsMounted();
+const Posts = ({ user, posts }) => {
+  const dispatch = useDispatch();
 
   const [state, setState] = useState({
-    posts: [],
     filterPosts: false,
     showEdit: false,
     postToEdit: null,
     search: "",
     changedTitle: "",
     changedDescription: "",
-    loading: false,
   });
 
   useEffect(() => {
-    setState((state) => ({ ...state, loading: true }));
+    let unsubscribe;
 
-    const callback = (posts) => {
-      if (isMaunted) {
-        setState((state) => ({ ...state, posts, loading: false }));
-      }
+    const callback = (u) => {
+      unsubscribe = u;
     };
 
-    const unsubsribe = subscribeToPosts(callback);
+    dispatch(subscribeToPosts(callback));
     return () => {
-      if (_.isFunction(unsubsribe)) {
-        unsubsribe();
+      if (_.isFunction(unsubscribe)) {
+        unsubscribe();
       }
     };
-  }, [isMaunted]);
+  }, [dispatch]);
 
   const removePost = (post) => {
     deletePost(post);
@@ -95,12 +80,12 @@ const Posts = ({ user }) => {
     });
   };
 
-  const seletedPosts = state.posts
-    ? state.posts.filter((post) => {
+  const seletedPosts = posts
+    ? posts.filter((post) => {
         if (state.filterPosts) {
           return post.user === user.uid;
         } else {
-          return state.posts;
+          return posts;
         }
       })
     : [];
@@ -148,4 +133,10 @@ const Posts = ({ user }) => {
   );
 };
 
-export default Posts;
+const mapStateToProps = (state) => {
+  return {
+    posts: state.posts.posts,
+  };
+};
+
+export default connect(mapStateToProps)(Posts);
